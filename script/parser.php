@@ -111,10 +111,13 @@ class ElBulliRecipe {
 
     public $ingredients = [];
 
-    public function __construct($str, array $defaults = []) {
-        $utf8_str = iconv('utf-16le', 'utf-8', $str);
-        $this->data = el_bulli_string_decode($utf8_str);
-        $this->str = $utf8_str;
+    public function __construct($str, array $defaults = [], $iconv = true) {
+        if($iconv == true)
+            $this->str = iconv('utf-16le', 'utf-8', $str);
+        else
+            $this->str = $str;
+
+        $this->data = el_bulli_string_decode($this->str);
         $this->assign_defaults($defaults);
         $this->assign_id();
         $this->assign_attributes();
@@ -172,7 +175,7 @@ class ElBulliRecipe {
      * Push a new ingredient to the end of the list.
      */
     public function addIngredient($str, $header) {
-        $parts = explode('#', $str);
+        $parts = explode($this->getSeparator(), $str);
         foreach($parts as $ingredient) {
             $ingredient = trim($ingredient);
             if(empty($ingredient)) continue;
@@ -200,7 +203,7 @@ class ElBulliRecipe {
                 $this->description .= "### $head\n\n";
             } elseif(startsWith($k, 'descripcioelaboracio')) {
                 $desc = $this->data[$k];
-                $desc = str_replace('#', "\n", $desc);
+                $desc = str_replace($this->getSeparator(), "\n", $desc);
                 $this->description .= $desc;
                 $this->description .= "\n\n";
             }
@@ -213,7 +216,7 @@ class ElBulliRecipe {
         // acabatipresentacio
         if(array_key_exists('acabatipresentacio', $this->data)) {
             $pres = $this->data['acabatipresentacio'];
-            $pres = str_replace('#', "\n", $pres);
+            $pres = str_replace($this->getSeparator(), "\n", $pres);
             $this->presentation = $pres;
         }
     }
@@ -224,6 +227,20 @@ class ElBulliRecipe {
         $id = trim($parts[1]);
         if(!empty($id))
             $this->id = $id;
+    }
+
+    /**
+     * Get the character (sequence) used to split the lines
+     * of recipes and ingredients.
+     */
+    private function getSeparator() {
+        switch($this->cookbook) {
+        case 'elBulli1994-1997':
+            if($this->language != 'cs')
+                return '<br>';
+        default:
+            return '#';
+        }
     }
 
     public function toArray() {

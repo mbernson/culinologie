@@ -1,7 +1,5 @@
 <?php
 
-require 'vendor/autoload.php';
-
 // http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
 function startsWith($haystack, $needle) {
     // search backwards starting from haystack length characters from the end
@@ -16,12 +14,20 @@ function endsWith($haystack, $needle) {
 function el_bulli_string_decode($str) {
     $result = [];
 
-    $items = explode('&', $str);
+    $items = explode("\n&", $str);
 
     foreach($items as $item) {
         $parts = explode('=', trim($item));
-        $key = trim($parts[0]);
-        $value = trim($parts[1]);
+        try {
+            $key = trim($parts[0]);
+            $value = trim($parts[1]);
+        } catch(ErrorException $e) {
+            echo "ITEM:\n\n";
+            var_dump($item);
+            echo "PARTS:\n\n";
+            var_dump($parts);
+            throw $e;
+        }
 
         if(empty($key)) {
             $inter = var_export($result);
@@ -67,6 +73,20 @@ class ElBulliIngredient {
         }
     }
 
+    public function toArray() {
+        return [
+            'recipe_id' => $this->recipe_id,
+            'text' => $this->text,
+            'amount' => $this->amount,
+            'unit' => $this->unit,
+            'header' => $this->header,
+        ];
+    }
+
+    public function insert() {
+        DB::table('ingredients')->insert($this->toArray());
+    }
+
 }
 
 class ElBulliRecipe {
@@ -86,6 +106,7 @@ class ElBulliRecipe {
     public $presentation;
 
     public $category;
+    public $language;
     public $cookbook;
 
     public $ingredients = [];
@@ -94,10 +115,7 @@ class ElBulliRecipe {
         $utf8_str = iconv('utf-16le', 'utf-8', $str);
         $this->data = el_bulli_string_decode($utf8_str);
         $this->str = $utf8_str;
-
-        if(!empty($defaults))
-            $this->assign_defaults($defaults);
-
+        $this->assign_defaults($defaults);
         $this->assign_id();
         $this->assign_attributes();
         $this->assign_ingredients();
@@ -213,15 +231,41 @@ class ElBulliRecipe {
             'id' => $this->id,
             'cookbook' => $this->cookbook,
             'title' => $this->title,
+            'language' => $this->language,
             'temperature' => $this->temperature,
-            'people ' => intval($this->people),
+            'people' => intval($this->people),
             'year' => intval($this->year),
-            'season ' => $this->season,
+            'season' => $this->season,
             'category' => $this->category,
-            'description ' => $this->description,
-            'presentation ' => $this->presentation,
-            'ingredients ' => $this->ingredients,
+            'description' => $this->description,
+            'presentation' => $this->presentation,
+            'ingredients' => $this->ingredients,
         ];
+    }
+
+    public function toDatabaseArray() {
+        return [
+            'elbulli_nr' => $this->id,
+            'cookbook' => $this->cookbook,
+            'title' => $this->title,
+            'language' => $this->language,
+            'temperature' => $this->temperature,
+            'people' => $this->people,
+            'year' => $this->year,
+            'season' => $this->season,
+            'category' => $this->category,
+            'description' => $this->description,
+            'presentation' => $this->presentation,
+        ];
+    }
+
+    public function insert() {
+        $id = DB::table('recipes')->insertGetId($this->toDatabaseArray());
+        foreach($this->ingredients as $ingredient) {
+            $ingredient->recipe_id = $id;
+            $ingredient->insert();
+        }
+        echo "Saved recipe '$this->title'\nWith id: $id\n";
     }
 
     public function dump() {
@@ -247,35 +291,3 @@ class ElBulliRecipe {
     }
 }
 
-// Import
-
-$params = [
-    'cookbook' => 'elBulli1998-2002',
-    'language' => 'uk',
-];
-
-$path = "/Volumes/{$params['cookbook']}/{$params['language']}/data/";
-$contents = file_get_contents($path.'478.dat');
-
-$recipe = new ElBulliRecipe($contents);
-var_dump($recipe);
-
-exit;
-
-$directory = new DirectoryIterator($path);
-$i = 455;
-
-foreach($directory as $file) {
-    if($i >= 825) break;
-
-    if(!$file->isDot() && $file->getExtension() == 'dat') {
-        echo "Reading file {$file->getPathname()}\r\n";
-        $contents = file_get_contents($file->getPathname());
-        $recipe = new ElBulliRecipe($contents, $params);
-        var_dump($recipe->toArray());
-        echo "\n";
-    } else {
-        echo "Skipping file {$file->getPathname()}\r\n";
-    }
-    $i++;
-}

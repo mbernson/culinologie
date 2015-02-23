@@ -99,7 +99,7 @@ class RecipesController extends Controller {
 	 */
 	public function create()
 	{
-            return view('recipes.create');
+            return view('recipes.create')->withRecipe(new Recipe);
 	}
 
 	/**
@@ -109,36 +109,15 @@ class RecipesController extends Controller {
 	 */
 	public function store($cookbook = null)
 	{
-            $input = Input::only('title', 'people',
-                'presentation', 'year', 'season',
-                'cookbook', 'category', 'temperature');
+            $recipe = new Recipe();
 
-            $recipe = new Recipe($input);
-            $recipe->tracking_nr = $this->recipes->table('recipes')->max('tracking_nr') + 1;
+            if($cookbook != null)
+                $recipe->cookbook = $cookbook;
 
-            $recipe->language = Input::get('lang', 'nl');
-            if(Input::has('directions'))
-                $recipe->description = Input::get('directions');
-
-            if(!empty(Input::get('category_alt')))
-                $recipe->category = Input::get('category_alt');
-
-            $saved = $recipe->save();
-
-            $ingredients = [];
-            foreach(preg_split("/((\r?\n)|(\r\n?))/", Input::get('ingredients')) as $line){
-                $line = trim($line);
-                if(!empty($line))
-                    $ingredients[] = Ingredient::createFromLine($line);
-            }
-
-            $recipe->ingredients()->saveMany($ingredients);
-
-            if($saved) {
+            if($this->updateRecipe($recipe))
                 return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
-            } else {
-                dd($recipe, $ingredients);
-            }
+            else
+                dd($recipe);
 	}
 
 	/**
@@ -149,12 +128,13 @@ class RecipesController extends Controller {
 	 */
 	public function show($id)
 	{
-            $lang = Input::get('lang', 'nl');
+            $query = $this->recipes->table('recipes')
+                ->where('tracking_nr', '=', $id);
 
-            $recipe = $this->recipes->table('recipes')
-                ->where('tracking_nr', '=', $id)
-                ->where('language', '=', $lang)
-                ->first();
+            if(Input::has('lang'))
+                $query->where('language', '=', Input::get('lang'));
+
+            $recipe = $query->first();
 
             if(!$recipe) abort(404);
 
@@ -182,8 +162,8 @@ class RecipesController extends Controller {
 	 */
 	public function edit($id)
 	{
-            $recipe = $this->recipes->table('recipes')
-                ->where('tracking_nr', '=', $id)
+            $lang = Input::get('lang', 'uk');
+            $recipe = Recipe::where('tracking_nr', '=', $id)
                 ->where('language', '=', $lang)
                 ->first();
 
@@ -196,13 +176,53 @@ class RecipesController extends Controller {
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  int  $tracking_nr
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($tracking_nr)
 	{
-		//
+            $lang = Input::get('lang');
+            $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
+                ->where('language', '=', $lang)
+                ->first();
+
+            if(!$recipe) abort(404);
+
+            $del = $this->recipes->table('ingredients')
+                ->where('recipe_id', '=', $recipe->id)->delete();
+
+            if($this->updateRecipe($recipe))
+                return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
+            else
+                dd($recipe);
 	}
+
+        private function updateRecipe(Recipe $recipe) {
+            $input = Input::only('title', 'people',
+                'presentation', 'year', 'season',
+                'cookbook', 'category', 'temperature');
+
+            $recipe->fill($input);
+
+            if(empty($recipe->tracking_nr))
+                $recipe->tracking_nr = $this->recipes->table('recipes')->max('tracking_nr') + 1;
+
+            if(Input::has('lang'))
+                $recipe->language = Input::get('lang');
+
+            if(Input::has('directions'))
+                $recipe->description = Input::get('directions');
+
+            // Override the category if the user provided one.
+            if(!empty(Input::get('category_alt')))
+                $recipe->category = Input::get('category_alt');
+
+            $saved = $recipe->save();
+
+            $ingredients_saved = $recipe->addIngredientsFromText(Input::get('ingredients'));
+
+            return $saved && $ingredients_saved;
+        }
 
 	/**
 	 * Remove the specified resource from storage.

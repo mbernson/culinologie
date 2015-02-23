@@ -4,11 +4,15 @@
 
 <div class="container">
 	<div class="row">
-                @if(Session::has('return_url'))
 		<div class="col-md-3">
-                    <p><a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a></p>
+                    <p>
+                    @if(Session::has('return_url'))
+                        <a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a>
+                    @endif
+                        <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success">Bewerken</a>
+                    </p>
                 </div>
-                @endif
+
 		<div class="col-md-9 col-md-offset-3">
                     <h1>{{ $recipe->title }}</h1>
 

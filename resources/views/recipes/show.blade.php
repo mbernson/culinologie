@@ -24,9 +24,11 @@
 
                     {!! $recipe->description_html !!}
 
+                    @if(!empty($recipe->presentation))
                     <h2>Finishing touches</h2>
 
                     {!! $recipe->presentation_html !!}
+                    @endif
                 </div>
 	</div>
 	<div class="row">

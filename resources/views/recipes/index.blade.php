@@ -15,11 +15,9 @@
                         <div class="form-group">
                             <label for="lang">Taal</label>
                             <select class="form-control" name="lang">
-                                <option value="uk">Engels (Groot Brittanië)</option>
-                                <option value="us">Engels (Amerikaans)</option>
-                                <option value="nl">Nederlands</option>
-                                <option value="cs">Spaans</option>
-                                <option value="ct">Catalaans</option>
+                                @foreach($languages as $code => $lang)
+                                <option value="{{ $code }}" {{ $params['lang'] == $code ? 'selected' : '' }}>{{ $lang }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -29,7 +27,7 @@
                             <select class="form-control" name="cookbook">
                                 <option value="*">Alle kookboeken</option>
                                 @foreach($cookbooks as $cb)
-                                <option value="{{ $cb->slug }}">{{ $cb->title }}</option>
+                                <option value="{{ $cb->slug }}" {{ $params['cookbook'] == $cb->slug ? 'selected' : '' }}>{{ $cb->title }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -40,7 +38,7 @@
                             <select class="form-control" name="category">
                                 <option value="*">Alle categorieën</option>
                                 @foreach($categories as $cat)
-                                <option value="{{ $cat }}">{{ $cat }}</option>
+                                <option value="{{ $cat }}" {{ $params['category'] == $cat ? 'selected' : '' }}>{{ $cat }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -50,6 +48,7 @@
                 </div>
 		<div class="col-md-10">
                 <h1>Recepten</h1>
+                <p> <a class="btn btn-success" href="/recipes/create" role="button">Nieuw recept</a> </p>
                 <table class="table table-striped table-bordered">
                     <tr>
                         <th>Volgnr.</th>

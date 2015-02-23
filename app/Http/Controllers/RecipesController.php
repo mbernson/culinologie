@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Collection;
 
+use App\Models\Recipe;
+use App\Models\Ingredient;
+
 class RecipesController extends Controller {
 
     private $recipes;
@@ -26,6 +29,12 @@ class RecipesController extends Controller {
 	public function index($cookbook = '*')
 	{
             $lang = Input::get('lang', 'uk');
+            $params = [
+                'lang' => $lang,
+                'cookbook' => null,
+                'category' => null,
+                'title' => null,
+            ];
 
             $categories = $this->recipes->table('recipes')
                 ->select('category')
@@ -36,20 +45,22 @@ class RecipesController extends Controller {
             $recipes = $this->recipes->table('recipes')
                 ->where('language', '=', $lang)
                 ->orderBy('tracking_nr', 'asc')
-                ->orderBy('created_at', 'desc')
-                ;
+                ->orderBy('created_at', 'desc');
 
             $title = null;
             if(Input::has('title')) {
                 $title = Input::get('title');
                 $recipes->where('title', 'like', "%$title%");
+                $params['title'] = $title;
             }
 
             $category = null;
             if(Input::has('category')) {
                 $category = Input::get('category');
-                if($category != '*')
+                if($category != '*') {
                     $recipes->where('category', '=', $category);
+                    $params['category'] = $category;
+                }
             }
 
             if($cookbook == '*') {
@@ -64,16 +75,18 @@ class RecipesController extends Controller {
 
             if($cookbook != '*') {
                 $recipes->where('cookbook', '=', $cookbook);
+                $params['cookbook'] = $cookbook;
             }
 
             return view('recipes.index')
-                ->with('recipes', $recipes->paginate(static::$per_page))
+                ->with('recipes', $recipes->paginate(static::$per_page)
+                    ->appends($params))
                 ->with('language', $lang)
                 ->with('title', $title)
 
                 ->with('categories', $categories)
                 ->with('cookbooks', $cookbooks)
-                ;
+                ->with('params', $params);
 	}
 
 	/**
@@ -91,10 +104,35 @@ class RecipesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store($cookbook = null)
 	{
-            $input = Input::only('title', 'ingredients', 'directions', 'presentation', 'lang');
-            dd($input);
+            $input = Input::only('title', 'people',
+                'presentation',
+                'cookbook', 'category', 'temperature');
+
+            $recipe = new Recipe($input);
+            $recipe->tracking_nr = $this->recipes->table('recipes')->max('tracking_nr') + 1;
+
+            $recipe->language = Input::get('lang', 'nl');
+            if(Input::has('directions'))
+                $recipe->description = Input::get('directions');
+
+            $saved = $recipe->save();
+
+            $ingredients = [];
+            foreach(preg_split("/((\r?\n)|(\r\n?))/", Input::get('ingredients')) as $line){
+                $line = trim($line);
+                if(!empty($line))
+                    $ingredients[] = Ingredient::createFromLine($line);
+            }
+
+            $recipe->ingredients()->saveMany($ingredients);
+
+            if($saved) {
+                return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
+            } else {
+                dd($recipe, $ingredients);
+            }
 	}
 
 	/**
@@ -105,7 +143,7 @@ class RecipesController extends Controller {
 	 */
 	public function show($id)
 	{
-            $lang = Input::get('language', 'uk');
+            $lang = Input::get('lang', 'nl');
 
             $recipe = $this->recipes->table('recipes')
                 ->where('tracking_nr', '=', $id)

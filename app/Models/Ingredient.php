@@ -10,6 +10,7 @@ final class Ingredient extends Model {
 
     public static function createFromLine($text, $header = null) {
         $ingredient = new static();
+        // Strip markdown list characters
         $text = preg_replace('/^(\*|-)\ /', '', $text);
         $ingredient->text = $text;
         $ingredient->header = $header;

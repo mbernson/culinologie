@@ -44,11 +44,10 @@ final class RecipesComposer {
     public function categories(View $view) {
         $view->with('categories', 
             $this->db->table('recipes')
-                ->select('category')
-                /* ->where('language', '=', $lang) */
-                ->groupBy('category')
-                ->orderBy('language', 'asc')
-                ->lists('category')
+            ->select('category')
+            ->groupBy('category')
+            ->orderBy('language', 'asc')
+            ->lists('category')
         );
     }
 
@@ -60,6 +59,5 @@ final class RecipesComposer {
             ->get()
         );
     }
-
 
 }

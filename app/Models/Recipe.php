@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ingredient;
-use \Parsedown;
+use Parsedown;
 
 final class Recipe extends Model {
 

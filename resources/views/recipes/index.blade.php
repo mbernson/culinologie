@@ -43,7 +43,8 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Toepassen</button>
+                        <a href="/recipes?lang=nl" class="btn btn-danger">Reset filters</a>
+                        <button type="submit" class="btn btn-primary pull-right">Toepassen</button>
                     </form>
                 </div>
 		<div class="col-md-10">

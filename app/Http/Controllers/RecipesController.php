@@ -6,6 +6,7 @@ use Illuminate\Database\DatabaseManager;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Collection;
 
 use App\Models\Recipe;
@@ -77,6 +78,8 @@ class RecipesController extends Controller {
                 $recipes->where('cookbook', '=', $cookbook);
                 $params['cookbook'] = $cookbook;
             }
+
+            Session::flash('return_url', route('recipes.index', $params));
 
             return view('recipes.index')
                 ->with('recipes', $recipes->paginate(static::$per_page)

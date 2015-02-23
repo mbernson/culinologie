@@ -4,6 +4,20 @@
 
 <div class="container">
 	<div class="row">
+                @if(Session::has('return_url'))
+		<div class="col-md-3">
+                    <p><a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a></p>
+                </div>
+                @endif
+		<div class="col-md-9 col-md-offset-3">
+                    <h1>{{ $recipe->title }}</h1>
+
+                    @if($recipe->people != 0)
+                    <p>Voor {{ $recipe->people }} personen.</p>
+                    @endif
+                </div>
+        </div>
+	<div class="row">
 		<div class="col-md-3">
                     <h2>Ingrediënten</h2>
 
@@ -15,11 +29,8 @@
                         @endforeach
                         </ul>
                     @endforeach
-
                 </div>
 		<div class="col-md-9">
-                    <h1>{{ $recipe->title }}</h1>
-
                     <h2>Bereiding</h2>
 
                     {!! $recipe->description_html !!}
@@ -30,10 +41,6 @@
                     {!! $recipe->presentation_html !!}
                     @endif
                 </div>
-	</div>
-	<div class="row">
-            <div class="col-md-10 col-md-offset-1">
-            </div>
 	</div>
 </div>
 

@@ -107,7 +107,7 @@ class RecipesController extends Controller {
 	public function store($cookbook = null)
 	{
             $input = Input::only('title', 'people',
-                'presentation',
+                'presentation', 'year', 'season',
                 'cookbook', 'category', 'temperature');
 
             $recipe = new Recipe($input);
@@ -116,6 +116,9 @@ class RecipesController extends Controller {
             $recipe->language = Input::get('lang', 'nl');
             if(Input::has('directions'))
                 $recipe->description = Input::get('directions');
+
+            if(!empty(Input::get('category_alt')))
+                $recipe->category = Input::get('category_alt');
 
             $saved = $recipe->save();
 

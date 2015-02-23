@@ -34,7 +34,7 @@
                         @endif
 
                         <div class="form-group">
-                            <label for="lang">Categorie</label>
+                            <label for="category">Categorie</label>
                             <select class="form-control" name="category">
                                 <option value="*">Alle categorieën</option>
                                 @foreach($categories as $cat)

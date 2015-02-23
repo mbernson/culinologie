@@ -73,6 +73,13 @@
                         </select>
                     </div>
 
+                    <p class="center"><strong>of geef een nieuwe categorie op:</strong></p>
+
+                    <div class="form-group">
+                        <label for="category_alt">Nieuwe categorie</label>
+                        <input type="text" class="form-control" name="category_alt" placeholder="Soepen" />
+                    </div>
+
                     <div class="form-group">
                         <label for="temperature">Temperatuur</label>
                         <select class="form-control" name="temperature">

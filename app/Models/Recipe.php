@@ -37,6 +37,13 @@ final class Recipe extends Model {
         return $this->ingredients()->saveMany($ingredients);
     }
 
+    public function getImages() {
+        return [
+            "/uploads/pictures/{$this->tracking_nr}.jpg" => 'Foto',
+            "/uploads/detail/{$this->tracking_nr}.jpg" => 'Detail foto',
+        ];
+    }
+
     public function getHtmlDescription() {
         return Parsedown::instance()->text($this->description);
     }

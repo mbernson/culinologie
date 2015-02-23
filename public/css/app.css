@@ -6234,6 +6234,10 @@ label,
 .pagination {
   margin: 20px auto;
 }
+.well img,
+.panel img {
+  max-width: 100%;
+}
 .center {
   text-align: center;
 }

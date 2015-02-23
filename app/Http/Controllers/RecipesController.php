@@ -23,7 +23,7 @@ class RecipesController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($cookbook = '*')
 	{
             $lang = Input::get('lang', 'uk');
 
@@ -32,8 +32,6 @@ class RecipesController extends Controller {
                 ->where('language', '=', $lang)
                 ->groupBy('category')
                 ->lists('category');
-
-            $cookbooks = $this->recipes->table('cookbooks')->get();
 
             $recipes = $this->recipes->table('recipes')
                 ->where('language', '=', $lang)
@@ -54,11 +52,18 @@ class RecipesController extends Controller {
                     $recipes->where('category', '=', $category);
             }
 
-            $cookbook = null;
+            if($cookbook == '*') {
+                $cookbooks = $this->recipes->table('cookbooks')->get();
+            } else {
+                $cookbooks = null;
+            }
+
             if(Input::has('cookbook')) {
                 $cookbook = Input::get('cookbook');
-                if($cookbook != '*')
-                    $recipes->where('cookbook', '=', $cookbook);
+            }
+
+            if($cookbook != '*') {
+                $recipes->where('cookbook', '=', $cookbook);
             }
 
             return view('recipes.index')
@@ -78,7 +83,7 @@ class RecipesController extends Controller {
 	 */
 	public function create()
 	{
-		//
+            return view('recipes.create');
 	}
 
 	/**
@@ -88,7 +93,8 @@ class RecipesController extends Controller {
 	 */
 	public function store()
 	{
-		//
+            $input = Input::only('title', 'ingredients', 'directions', 'presentation', 'lang');
+            dd($input);
 	}
 
 	/**
@@ -132,7 +138,15 @@ class RecipesController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+            $recipe = $this->recipes->table('recipes')
+                ->where('tracking_nr', '=', $id)
+                ->where('language', '=', $lang)
+                ->first();
+
+            if(!$recipe) abort(404);
+
+            return view('recipes.create')
+                ->withRecipe($recipe);
 	}
 
 	/**

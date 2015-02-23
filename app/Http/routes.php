@@ -12,7 +12,15 @@
 */
 
 Route::get('/', 'RecipesController@index');
+Route::get('/recipes', 'RecipesController@index');
+
 Route::resource('recipes', 'RecipesController');
+Route::resource('cookbooks', 'CookbooksController');
+
+Route::group(['prefix' => 'cookbooks/{slug}'], function()
+{
+    Route::resource('recipes', 'RecipesController');
+});
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

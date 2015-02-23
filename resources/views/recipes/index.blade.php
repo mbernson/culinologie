@@ -17,11 +17,13 @@
                             <select class="form-control" name="lang">
                                 <option value="uk">Engels (Groot Brittanië)</option>
                                 <option value="us">Engels (Amerikaans)</option>
+                                <option value="nl">Nederlands</option>
                                 <option value="cs">Spaans</option>
                                 <option value="ct">Catalaans</option>
                             </select>
                         </div>
 
+                        @if($cookbooks != null)
                         <div class="form-group">
                             <label for="lang">Kookboek</label>
                             <select class="form-control" name="cookbook">
@@ -31,6 +33,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @endif
 
                         <div class="form-group">
                             <label for="lang">Categorie</label>

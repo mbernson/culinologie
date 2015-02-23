@@ -11,9 +11,8 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index');
-
-Route::get('home', 'HomeController@index');
+Route::get('/', 'RecipesController@index');
+Route::resource('recipes', 'RecipesController');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

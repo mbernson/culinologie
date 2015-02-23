@@ -24,16 +24,16 @@ final class RecipesComposer {
 
     public function temperatures(View $view) {
         $view->with('temperatures', [
-            'HOT' => 'Warm',
+            'HOT' => 'Warm gerecht',
             'ROOM' => 'Kamertemperatuur',
-            'COLD' => 'Koud',
-            'FROZEN' => 'Bevroren',
+            'COLD' => 'Koud gerecht',
+            'FROZEN' => 'Bevroren gerecht',
         ]);
     }
 
     public function seasons(View $view) {
         $view->with('seasons', [
-            'ALL YEAR' => 'Het hele jaar',
+            'ALL YEAR' => 'Het hele jaar door',
             'SPRING' => 'Lente',
             'SUMMER' => 'Zomer',
             'FALL' => 'Herfst',

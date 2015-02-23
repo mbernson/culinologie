@@ -19,6 +19,10 @@ class ViewComposerServiceProvider extends ServiceProvider {
             view()->composer('recipes.create', 'App\Composers\RecipesComposer@temperatures');
             view()->composer('recipes.create', 'App\Composers\RecipesComposer@seasons');
             view()->composer('recipes.create', 'App\Composers\RecipesComposer@cookbooks');
+
+            view()->composer('recipes.show', 'App\Composers\RecipesComposer@categories');
+            view()->composer('recipes.show', 'App\Composers\RecipesComposer@temperatures');
+            view()->composer('recipes.show', 'App\Composers\RecipesComposer@seasons');
 	}
 
 	/**

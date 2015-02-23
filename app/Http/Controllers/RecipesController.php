@@ -128,8 +128,7 @@ class RecipesController extends Controller {
 	 */
 	public function show($id)
 	{
-            $query = $this->recipes->table('recipes')
-                ->where('tracking_nr', '=', $id);
+            $query = Recipe::where('tracking_nr', '=', $id);
 
             if(Input::has('lang'))
                 $query->where('language', '=', Input::get('lang'));
@@ -138,18 +137,20 @@ class RecipesController extends Controller {
 
             if(!$recipe) abort(404);
 
-            $recipe->description_html  = \Parsedown::instance()->text($recipe->description);
-            $recipe->presentation_html = \Parsedown::instance()->text($recipe->presentation);
-
             $ingredients = $this->recipes->table('ingredients')
                 ->select('text', 'header', 'amount', 'unit')
                 ->where('recipe_id', '=', $recipe->id)
                 ->get();
 
+            $cookbook = $this->recipes->table('cookbooks')
+                ->where('slug', '=', $recipe->cookbook)
+                ->first();
+
             $groups = Collection::make($ingredients)->groupBy('header');
 
             return view('recipes.show')
                 ->with('recipe', $recipe)
+                ->with('cookbook', $cookbook)
                 ->with('ingredients', $ingredients)
                 ->with('ingredient_groups', $groups);
 	}

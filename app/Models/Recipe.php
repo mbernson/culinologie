@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ingredient;
+use \Parsedown;
 
 final class Recipe extends Model {
 
@@ -34,6 +35,14 @@ final class Recipe extends Model {
         }
 
         return $this->ingredients()->saveMany($ingredients);
+    }
+
+    public function getHtmlDescription() {
+        return Parsedown::instance()->text($this->description);
+    }
+
+    public function getHtmlPresentation() {
+        return Parsedown::instance()->text($this->presentation);
     }
 
 }

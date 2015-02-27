@@ -2,17 +2,51 @@
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Ingredient;
+use App\Traits\HasVisibilities;
 use Parsedown;
 
 final class Recipe extends Model {
 
-    protected $table = 'recipes';
+    const VISIBILITY_PUBLIC = 0;
+    const VISIBILITY_PRIVATE = 1;
+    const VISIBILITY_LOGGED_IN = 2;
+
     protected $fillable = ['title', 'people', 'year', 'season',
                 'description', 'presentation', 'lang',
-                'cookbook', 'category', 'temperature'];
+                'cookbook', 'category', 'temperature', 'visibility'];
+
+    // Relations
 
     public function ingredients() {
         return $this->hasMany('App\Models\Ingredient');
+    }
+
+    public function cookbook_rel() {
+        return $this->belongsTo('App\Models\Cookbook', 'cookbook', 'slug');
+    }
+
+    // Scopes
+   
+    // Global scopes
+
+    use HasVisibilities; 
+
+    // Helpers
+    
+    public static function categories(array $languages) {
+        return static::select('category')
+            ->whereIn('language', $languages)
+            ->groupBy('category')
+            ->lists('category');
+    }
+
+    // Getters
+
+    public function getDescriptionAttribute() {
+        if(array_key_exists('description', $this->attributes))
+            return preg_replace('/### ?(\w|\d| )+\n?$/', '', $this->attributes['description']);
+        else
+            return '';
     }
 
     public function textIngredients() {

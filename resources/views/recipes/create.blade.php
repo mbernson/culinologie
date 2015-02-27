@@ -111,6 +111,15 @@
                         <input type="number" class="form-control" name="year" value="{{ $recipe->year or date('Y') }}" />
                     </div>
 
+                    <div class="form-group">
+                        <label for="visibility">Zichtbaarheid</label>
+                            <select class="form-control" name="visibility">
+                            @foreach($visibilities as $code => $v)
+                            <option value="{{ $code }}" {{ $recipe->visibility === $code ? 'selected' : '' }}>{{ $v }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn btn-lg btn-success">Recept opslaan</button>
             </div>
 	</div>

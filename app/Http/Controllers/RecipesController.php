@@ -37,8 +37,6 @@ class RecipesController extends Controller {
             'title' => null,
         ];
 
-        $categories = Recipe::categories($languages);
-
         $recipes = Recipe::select('tracking_nr', 'recipes.title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
@@ -47,7 +45,7 @@ class RecipesController extends Controller {
         $title = null;
         if(Input::has('title')) {
             $title = Input::get('title');
-            $recipes->where('title', 'like', "%$title%");
+            $recipes->where('recipes.title', 'like', "%$title%");
             $params['title'] = $title;
         }
 
@@ -58,12 +56,6 @@ class RecipesController extends Controller {
                 $recipes->where('category', '=', $category);
                 $params['category'] = $category;
             }
-        }
-
-        if($cookbook == '*') {
-            $cookbooks = $this->db->table('cookbooks')->get();
-        } else {
-            $cookbooks = null;
         }
 
         if(Input::has('cookbook')) {
@@ -78,13 +70,11 @@ class RecipesController extends Controller {
         Session::flash('return_url', route('recipes.index', $params));
 
         return view('recipes.index')
-            ->with('recipes', $recipes->paginate(static::$per_page)
-            ->appends($params))
+            ->with('recipes', $recipes->paginate(static::$per_page)->appends($params))
             ->with('langs', $languages)
             ->with('title', $title)
-
-            ->with('categories', $categories)
-            ->with('cookbooks', $cookbooks)
+            ->with('categories', Recipe::categories($languages))
+            ->with('hide_cookbooks', is_string($cookbook) && $cookbook != '*')
             ->with('params', $params);
     }
 

@@ -13,11 +13,11 @@ class ViewComposerServiceProvider extends ServiceProvider {
     {
         view()->composer('recipes.index', 'App\Composers\RecipesComposer@compose');
         view()->composer('recipes.index', 'App\Composers\RecipesComposer@categories');
-        view()->composer('recipes.index', 'App\Composers\RecipesComposer@cookbooks');
+        view()->composer('recipes.index', 'App\Composers\RecipesComposer@allCookbooks');
 
         view()->composer('recipes.create', 'App\Composers\RecipesComposer@compose');
         view()->composer('recipes.create', 'App\Composers\RecipesComposer@categories');
-        view()->composer('recipes.create', 'App\Composers\RecipesComposer@cookbooks');
+        view()->composer('recipes.create', 'App\Composers\RecipesComposer@userCookbooks');
 
         view()->composer('recipes.show', 'App\Composers\RecipesComposer@compose');
     }

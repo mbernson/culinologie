@@ -2,6 +2,7 @@
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
+use Auth;
 
 final class RecipesComposer {
 
@@ -55,10 +56,18 @@ final class RecipesComposer {
         );
     }
 
-    public function cookbooks(View $view) {
+    public function allCookbooks(View $view) {
         $view->with('cookbooks', 
             $this->db->table('cookbooks')
-            ->select('title', 'slug')
+            ->orderBy('id', 'desc')
+            ->get()
+        );
+    }
+
+    public function userCookbooks(View $view) {
+        $view->with('cookbooks', 
+            $this->db->table('cookbooks')
+            ->where('user_id', '=', Auth::user()->id)
             ->orderBy('id', 'desc')
             ->get()
         );

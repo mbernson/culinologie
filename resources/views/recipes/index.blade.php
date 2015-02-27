@@ -13,17 +13,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="lang">Taal</label>
-                            <select class="form-control" name="lang">
+                            <label for="lang[]">Taal</label>
+                            <select multiple class="form-control" name="lang[]">
                                 @foreach($languages as $code => $lang)
-                                <option value="{{ $code }}" {{ $params['lang'] == $code ? 'selected' : '' }}>{{ $lang }}</option>
+                                <option value="{{ $code }}" {{ in_array($code, $langs) ? 'selected' : '' }}>{{ $lang }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         @if($cookbooks != null)
                         <div class="form-group">
-                            <label for="lang">Kookboek</label>
+                            <label for="cookbook">Kookboek</label>
                             <select class="form-control" name="cookbook">
                                 <option value="*">Alle kookboeken</option>
                                 @foreach($cookbooks as $cb)

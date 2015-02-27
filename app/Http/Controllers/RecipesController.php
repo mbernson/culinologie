@@ -29,9 +29,9 @@ class RecipesController extends Controller {
      */
     public function index($cookbook = '*')
     {
-        $lang = Input::get('lang', 'uk');
+        $languages = Input::get('lang', ['nl', 'uk']);
         $params = [
-            'lang' => $lang,
+            'lang[]' => $languages,
             'cookbook' => null,
             'category' => null,
             'title' => null,
@@ -44,7 +44,7 @@ class RecipesController extends Controller {
             ->lists('category');
 
         $recipes = $this->db->table('recipes')
-            ->where('language', '=', $lang)
+            ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
             ->orderBy('created_at', 'desc');
 
@@ -84,7 +84,7 @@ class RecipesController extends Controller {
         return view('recipes.index')
             ->with('recipes', $recipes->paginate(static::$per_page)
             ->appends($params))
-            ->with('language', $lang)
+            ->with('langs', $languages)
             ->with('title', $title)
 
             ->with('categories', $categories)

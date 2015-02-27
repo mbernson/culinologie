@@ -11,34 +11,38 @@ final class RecipesComposer {
         $this->db = $db;
     }
 
-    public function compose(View $view) {
-        $view->with('languages', [
+    private $static_data = [
+        'languages' => [
             'nl' => 'Nederlands',
             'uk' => 'Engels (Groot Brittanië)',
             'us' => 'Engels (Amerikaans)',
             'cs' => 'Spaans',
             'ct' => 'Catalaans',
-        ]);
-
-    }
-
-    public function temperatures(View $view) {
-        $view->with('temperatures', [
+        ],
+        'visibilities' => [
+            0 => 'Voor iedereen',
+            1 => 'Alleen voor jezelf',
+            2 => 'Alleen voor ingelogde gebruikers',
+        ],
+        'temperatures' => [
             'HOT' => 'Warm gerecht',
             'ROOM' => 'Kamertemperatuur',
             'COLD' => 'Koud gerecht',
             'FROZEN' => 'Bevroren gerecht',
-        ]);
-    }
-
-    public function seasons(View $view) {
-        $view->with('seasons', [
+        ],
+        'seasons' => [
             'ALL YEAR' => 'Het hele jaar door',
             'SPRING' => 'Lente',
             'SUMMER' => 'Zomer',
             'FALL' => 'Herfst',
             'WINTER' => 'Winter',
-        ]);
+        ]
+    ];
+
+    public function compose(View $view) {
+        foreach($this->static_data as $k => $v) {
+            $view->with($k, $v);
+        }
     }
 
     public function categories(View $view) {

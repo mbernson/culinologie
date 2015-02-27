@@ -42,6 +42,13 @@ final class Recipe extends Model {
 
     // Getters
 
+    public function getDescriptionAttribute() {
+        if(array_key_exists('description', $this->attributes))
+            return preg_replace('/### ?(\w|\d| )+\n?$/', '', $this->attributes['description']);
+        else
+            return '';
+    }
+
     public function textIngredients() {
         $output = '';
         foreach($this->ingredients as $ingredient) {

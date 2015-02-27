@@ -54,8 +54,12 @@
                     <td>{{ $seasons[$recipe->season] or $recipe->season }}</td>
                 </tr>
                 <tr>
-                    <th>Jaar toegevoegd</th>
+                    <th>Jaar</th>
                     <td>{{ $recipe->year }}</td>
+                </tr>
+                <tr>
+                    <th>Zichtbaar</th>
+                    <td>{{ $visibilities[$recipe->visibility] }}</td>
                 </tr>
                 <!--
                 <tr>

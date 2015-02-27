@@ -37,13 +37,9 @@ class RecipesController extends Controller {
             'title' => null,
         ];
 
-        $categories = $this->db->table('recipes')
-            ->select('category')
-            ->where('language', '=', $lang)
-            ->groupBy('category')
-            ->lists('category');
+        $categories = Recipe::categories($languages);
 
-        $recipes = $this->db->table('recipes')
+        $recipes = Recipe::select('tracking_nr', 'recipes.title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
             ->orderBy('created_at', 'desc');
@@ -128,7 +124,7 @@ class RecipesController extends Controller {
      */
     public function show($id)
     {
-        $query = Recipe::where('tracking_nr', '=', $id);
+        $query = Recipe::select('recipes.*')->where('tracking_nr', '=', $id);
 
         if(Input::has('lang'))
             $query->where('language', '=', Input::get('lang'));
@@ -137,21 +133,12 @@ class RecipesController extends Controller {
 
         if(!$recipe) abort(404);
 
-        $ingredients = $this->db->table('ingredients')
-            ->select('text', 'header', 'amount', 'unit')
-            ->where('recipe_id', '=', $recipe->id)
-            ->get();
-
-        $cookbook = $this->db->table('cookbooks')
-            ->where('slug', '=', $recipe->cookbook)
-            ->first();
-
-        $groups = Collection::make($ingredients)->groupBy('header');
+        $groups = Collection::make($recipe->ingredients)->groupBy('header');
 
         return view('recipes.show')
             ->with('recipe', $recipe)
-            ->with('cookbook', $cookbook)
-            ->with('ingredients', $ingredients)
+            ->with('cookbook', $recipe->cookbook_rel)
+            ->with('ingredients', $recipe->ingredients)
             ->with('ingredient_groups', $groups);
     }
 
@@ -164,14 +151,15 @@ class RecipesController extends Controller {
     public function edit($id)
     {
         $lang = Input::get('lang', 'uk');
-        $recipe = Recipe::where('tracking_nr', '=', $id)
+        $recipe = Recipe::select('recipes.*')
+            ->where('tracking_nr', '=', $id)
             ->where('language', '=', $lang)
             ->first();
 
         if(!$recipe) abort(404);
 
         return view('recipes.create')
-            ->withRecipe($recipe);
+            ->with('recipe', $recipe);
     }
 
     /**
@@ -183,7 +171,8 @@ class RecipesController extends Controller {
     public function update($tracking_nr)
     {
         $lang = Input::get('lang');
-        $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
+        $recipe = Recipe::select('recipes.*')
+            ->where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $lang)
             ->first();
 
@@ -199,9 +188,9 @@ class RecipesController extends Controller {
     }
 
     private function updateRecipe(Recipe $recipe) {
-        $input = Input::only('title', 'people',
-            'presentation', 'year', 'season',
-            'cookbook', 'category', 'temperature');
+        $input = Input::only('title', 'people', 'presentation',
+            'year', 'season', 'cookbook', 'category', 'temperature', 'visibility'
+        );
 
         $recipe->fill($input);
 
@@ -233,7 +222,13 @@ class RecipesController extends Controller {
      */
     public function destroy($id)
     {
-        //
+        $recipe = Recipe::select('recipes.*')
+            ->where('tracking_nr', '=', $id)
+            ->where('language', '=', $lang)
+            ->first();
+
+        if(!$recipe) abort(404);
+
     }
 
 }

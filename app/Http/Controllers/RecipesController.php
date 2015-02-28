@@ -29,7 +29,7 @@ class RecipesController extends Controller {
      */
     public function index($cookbook = '*')
     {
-        $languages = Input::get('lang', ['nl', 'uk']);
+        $languages = Input::get('lang', ['nl']);
         $params = [
             'lang[]' => $languages,
             'cookbook' => null,

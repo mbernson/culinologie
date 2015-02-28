@@ -37,7 +37,7 @@ class RecipesController extends Controller {
             'title' => null,
         ];
 
-        $recipes = Recipe::select('tracking_nr', 'recipes.title', 'category', 'cookbook', 'language')
+        $recipes = Recipe::select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
             ->orderBy('created_at', 'desc');

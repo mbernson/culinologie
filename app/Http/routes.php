@@ -15,20 +15,21 @@ Route::get('/', 'RecipesController@index');
 Route::get('/recipes', 'RecipesController@index');
 
 Route::group(['prefix' => 'cookbooks/{slug}'], function() {
+    Route::resource('recipes', 'RecipesController', ['only' =>
+        ['index', 'show']]);
+});
 
+Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function() {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
-
 });
 
 Route::group(['middleware' => 'auth'], function() {
-
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
 
     Route::resource('cookbooks', 'CookbooksController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
-
 });
 
 Route::resource('recipes', 'RecipesController', ['only' => ['index', 'show']]);

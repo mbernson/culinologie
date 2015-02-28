@@ -34,6 +34,8 @@ final class Recipe extends Model {
     public static function categories(array $languages) {
         return static::select('category')
             ->whereIn('language', $languages)
+            ->orderBy('category')
+            ->orderBy('language')
             ->groupBy('category')
             ->lists('category');
     }

@@ -136,9 +136,6 @@ return [
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 
-//		'Illuminate\HTML\HTMLServiceProvider',
-
-
 		/*
 		 * Application Service Providers...
 		 */

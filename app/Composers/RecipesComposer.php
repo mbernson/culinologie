@@ -22,7 +22,7 @@ final class RecipesComposer {
         ],
         'visibilities' => [
             0 => 'Voor iedereen',
-            1 => 'Alleen voor jezelf',
+            1 => 'Alleen voor mijzelf',
             2 => 'Alleen voor ingelogde gebruikers',
         ],
         'temperatures' => [
@@ -51,6 +51,7 @@ final class RecipesComposer {
             $this->db->table('recipes')
             ->select('category')
             ->groupBy('category')
+            ->orderBy('category', 'asc')
             ->orderBy('language', 'asc')
             ->lists('category')
         );

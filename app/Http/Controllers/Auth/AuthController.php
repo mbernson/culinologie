@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller {
 
@@ -36,5 +37,19 @@ class AuthController extends Controller {
 
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
+
+    public function getRegister() {
+        if(env('SIGNUP_ENABLED') == true)
+            parent::getRegister();
+        else
+            return view('auth.register_disabled');
+    }
+
+    public function postRegister(Request $request) {
+        if(env('SIGNUP_ENABLED') == true)
+            parent::postRegister($request);
+        else
+            abort(404);
+    }
 
 }

@@ -132,7 +132,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <button type="submit" class="btn btn-danger">Recept verwijderen</button>
+            <p><button type="submit" class="btn btn-danger">Recept verwijderen</button></p>
         </div>
     </div>
 </form>

@@ -12,7 +12,6 @@ class ViewComposerServiceProvider extends ServiceProvider {
     public function boot()
     {
         view()->composer('recipes.index', 'App\Composers\RecipesComposer@compose');
-        view()->composer('recipes.index', 'App\Composers\RecipesComposer@categories');
         view()->composer('recipes.index', 'App\Composers\RecipesComposer@allCookbooks');
 
         view()->composer('recipes.create', 'App\Composers\RecipesComposer@compose');

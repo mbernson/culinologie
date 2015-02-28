@@ -51,6 +51,7 @@ final class RecipesComposer {
             $this->db->table('recipes')
             ->select('category')
             ->groupBy('category')
+            ->orderBy('category', 'asc')
             ->orderBy('language', 'asc')
             ->lists('category')
         );

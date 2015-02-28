@@ -138,7 +138,6 @@ return [
 
 //		'Illuminate\HTML\HTMLServiceProvider',
 
-        'Barryvdh\Debugbar\ServiceProvider',
 
 		/*
 		 * Application Service Providers...

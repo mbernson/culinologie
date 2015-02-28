@@ -136,8 +136,6 @@ return [
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 
-//		'Illuminate\HTML\HTMLServiceProvider',
-
         'Barryvdh\Debugbar\ServiceProvider',
 
 		/*

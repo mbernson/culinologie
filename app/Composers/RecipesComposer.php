@@ -22,7 +22,7 @@ final class RecipesComposer {
         ],
         'visibilities' => [
             0 => 'Voor iedereen',
-            1 => 'Alleen voor jezelf',
+            1 => 'Alleen voor mijzelf',
             2 => 'Alleen voor ingelogde gebruikers',
         ],
         'temperatures' => [

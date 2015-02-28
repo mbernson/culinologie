@@ -209,15 +209,22 @@ class RecipesController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $recipe = Recipe::select('recipes.*')
-            ->where('tracking_nr', '=', $id)
-            ->where('language', '=', $lang)
+        if(!Input::has('lang')) return abort(500);
+
+        $recipe = Recipe::where('tracking_nr', '=', $id)
+            ->where('language', '=', Input::get('lang'))
             ->first();
 
-        if(!$recipe) abort(404);
+        if(!Auth::check()) return abort(401);
+        if($recipe->cookbook_rel->user_id != $request->user()->id) return abort(401);
 
+        if($recipe->delete())
+            return redirect()->route('recipes.index')
+                ->with('status', 'Recept verwijderd.');
+        else
+            return abort(500);
     }
 
 }

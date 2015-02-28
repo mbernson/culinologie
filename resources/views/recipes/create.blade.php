@@ -125,4 +125,17 @@
 	</div>
 </form>
 
+@if($recipe->exists)
+<form class="container" method="POST" action="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-danger">Recept verwijderen</button>
+        </div>
+    </div>
+</form>
+@endif
+
 @stop

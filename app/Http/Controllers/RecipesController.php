@@ -6,7 +6,7 @@ use Illuminate\Database\DatabaseManager;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input, Session;
+use Input, Session, Auth;
 
 use App\Models\Recipe;
 use App\Models\Ingredient;
@@ -96,6 +96,7 @@ class RecipesController extends Controller {
     public function store($cookbook = null)
     {
         $recipe = new Recipe();
+        $recipe->user_id = Auth::user()->id;
 
         if($cookbook != null)
             $recipe->cookbook = $cookbook;
@@ -114,7 +115,7 @@ class RecipesController extends Controller {
      */
     public function show($id)
     {
-        $query = Recipe::select('recipes.*')->where('tracking_nr', '=', $id);
+        $query = Recipe::where('tracking_nr', '=', $id);
 
         if(Input::has('lang'))
             $query->where('language', '=', Input::get('lang'));
@@ -141,8 +142,7 @@ class RecipesController extends Controller {
     public function edit($id)
     {
         $lang = Input::get('lang', 'uk');
-        $recipe = Recipe::select('recipes.*')
-            ->where('tracking_nr', '=', $id)
+        $recipe = Recipe::where('tracking_nr', '=', $id)
             ->where('language', '=', $lang)
             ->first();
 
@@ -161,8 +161,7 @@ class RecipesController extends Controller {
     public function update($tracking_nr)
     {
         $lang = Input::get('lang');
-        $recipe = Recipe::select('recipes.*')
-            ->where('tracking_nr', '=', $tracking_nr)
+        $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $lang)
             ->first();
 

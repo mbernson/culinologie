@@ -23,17 +23,17 @@ final class VisibilityScope implements ScopeInterface {
     }
 
     public function applyLoggedInScope(Builder $query, User $user) {
-        $privateClause = function($query) use ($user) {
+        $isPrivate = function($query) use ($user) {
             $query->where('visibility', '=', Recipe::VISIBILITY_PRIVATE)
-                ->where('cookbooks.user_id', '=', $user->id);
+                  ->where('user_id', '=', $user->id);
         };
-        $whereFn = function($query) use ($privateClause) {
+
+        $whereVisible = function($query) use ($isPrivate) {
             $query->whereIn('visibility', [Recipe::VISIBILITY_PUBLIC, Recipe::VISIBILITY_LOGGED_IN])
-                ->orWhere($privateClause);
+                  ->orWhere($isPrivate);
         };
-        return $query->addSelect('cookbooks.user_id')
-                ->join('cookbooks', 'recipes.cookbook', '=', 'cookbooks.slug')
-                ->where($whereFn);
+
+        return $query->where($whereVisible);
     }
 
     public function remove(Builder $builder, Model $model) {

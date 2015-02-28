@@ -28,13 +28,12 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Culinologie</a>
+				<a class="navbar-brand" href="/">Culinologie</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li><a href="/recipes">Recepten</a></li>
-					<li><a href="/cookbooks">Kookboeken</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -54,7 +53,7 @@
 		</div>
 	</nav>
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="col-md-12">
             @include('partials.alerts')
         </div>

@@ -25,8 +25,6 @@ final class Recipe extends Model {
         return $this->belongsTo('App\Models\Cookbook', 'cookbook', 'slug');
     }
 
-    // Scopes
-   
     // Global scopes
 
     use HasVisibilities; 
@@ -60,12 +58,17 @@ final class Recipe extends Model {
     public function addIngredientsFromText($text) {
         if(empty($text)) return true;
 
+        $header = null;
         $ingredients = [];
 
         foreach(preg_split("/((\r?\n)|(\r\n?))/", $text) as $line){
             $line = trim($line);
-            if(!empty($line))
-                $ingredients[] = Ingredient::createFromLine($line);
+
+            if(preg_match('/^###?#? ?[\w|\d| ]+ ?$/', $line)) {
+                $header = trim(preg_replace('/^###?#? /', '', $line));
+            } else {
+                $ingredients[] = Ingredient::createFromLine($line, $header);
+            }
         }
 
         return $this->ingredients()->saveMany($ingredients);

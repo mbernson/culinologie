@@ -136,6 +136,7 @@ return [
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 
+        'Intervention\Image\ImageServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
 
 		/*
@@ -197,9 +198,7 @@ return [
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
 
-//		'Form'      => 'Illuminate\HTML\FormFacade',
-//		'HTML'      => 'Illuminate\HTML\HtmlFacade',
-
+        'Image' => 'Intervention\Image\Facades\Image',
 	],
 
 ];

@@ -3,11 +3,11 @@
 @section('content')
 
 @if($recipe->exists)
-<form class="container" method="POST" action="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">
+<form class="container" method="POST" action="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT">
 @else
 <form class="container" method="POST" action="/recipes">
-    <input type="hidden" name="_method" value="POST">
+    <input type="hidden" name="_method" value="POST" enctype="multipart/form-data">
 @endif
 
 	<div class="row">
@@ -45,6 +45,11 @@
             <div class="form-group">
                 <label for="presentation">Finishing touches (niet verplicht)</label>
                 <textarea name="presentation" rows="6" class="form-control">{{ $recipe->presentation }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="pictures">Foto</label>
+                <input type="file" name="picture" />
             </div>
 
             <input type="hidden" name="_token" value="{{ csrf_token() }}" />

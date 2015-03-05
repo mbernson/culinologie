@@ -50,11 +50,7 @@ final class Recipe extends Model {
     }
 
     public function textIngredients() {
-        $output = '';
-        foreach($this->ingredients as $ingredient) {
-            $output .= $ingredient->text . "\n";
-        }
-        return $output;
+        return join("\n", $this->ingredients->lists('text'));
     }
 
     public function addIngredientsFromText($text) {

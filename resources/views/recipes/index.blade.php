@@ -65,7 +65,7 @@
                     <td>{{ $recipe->tracking_nr }}</td>
                     <td><a href="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">{{ $recipe->title }}</a></td>
                     <td>{{ $recipe->category }}</td>
-                    <td>{{ $recipe->cookbook }}</td>
+                    <td><a href="/cookbooks/{{ $recipe->cookbook }}/recipes">{{ $recipe->cookbook }}</a></td>
                 </tr>
                 @endforeach
             </table>

@@ -6,7 +6,7 @@ use Illuminate\Database\DatabaseManager;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input, Session, Auth;
+use Input, Session, Auth, Image, Request as RequestFacade;
 
 use App\Models\Recipe;
 use App\Models\Ingredient;
@@ -197,6 +197,18 @@ class RecipesController extends Controller {
             $recipe->category = Input::get('category_alt');
 
         $saved = $recipe->save();
+
+        if(RequestFacade::hasFile('picture')) {
+            $path = join(DIRECTORY_SEPARATOR, [
+                public_path(),
+                'uploads',
+                'pictures'
+            ]);
+            $filename = $recipe->tracking_nr.'.jpg';
+            $file = RequestFacade::file('picture')->move($path, $filename);
+            $image = Image::make($file)->widen(480);
+            $image->save($path.DIRECTORY_SEPARATOR.$filename);
+        }
 
         $ingredients_saved = $recipe->addIngredientsFromText(Input::get('ingredients'));
 

@@ -14,12 +14,14 @@ use App\Models\Ingredient;
 class RecipesController extends Controller {
 
     private $db;
+    private $recipes;
 
     private static $per_page = 20;
 
-    public function __construct(DatabaseManager $db)
+    public function __construct(DatabaseManager $db, Recipe $recipes)
     {
         $this->db = $db;
+        $this->recipes = $recipes;
     }
 
     /**
@@ -37,7 +39,7 @@ class RecipesController extends Controller {
             'title' => null,
         ];
 
-        $recipes = Recipe::select('tracking_nr', 'title', 'category', 'cookbook', 'language')
+        $recipes = $this->recipes->select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
             ->orderBy('created_at', 'desc');
@@ -73,7 +75,7 @@ class RecipesController extends Controller {
             ->with('recipes', $recipes->paginate(static::$per_page)->appends($params))
             ->with('langs', $languages)
             ->with('title', $title)
-            ->with('categories', Recipe::categories($languages))
+            ->with('categories', $this->recipes->categories($languages))
             ->with('hide_cookbooks', is_string($cookbook) && $cookbook != '*')
             ->with('params', $params);
     }
@@ -115,7 +117,7 @@ class RecipesController extends Controller {
      */
     public function show($id)
     {
-        $query = Recipe::where('tracking_nr', '=', $id);
+        $query = $this->recipes->where('tracking_nr', '=', $id);
 
         if(Input::has('lang'))
             $query->where('language', '=', Input::get('lang'));
@@ -142,7 +144,7 @@ class RecipesController extends Controller {
     public function edit($id)
     {
         $lang = Input::get('lang', 'uk');
-        $recipe = Recipe::where('tracking_nr', '=', $id)
+        $recipe = $this->recipes->where('tracking_nr', '=', $id)
             ->where('language', '=', $lang)
             ->first();
 
@@ -161,7 +163,7 @@ class RecipesController extends Controller {
     public function update($tracking_nr)
     {
         $lang = Input::get('lang');
-        $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
+        $recipe = $this->recipes->where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $lang)
             ->first();
 
@@ -225,7 +227,7 @@ class RecipesController extends Controller {
     {
         if(!Input::has('lang')) return abort(500);
 
-        $recipe = Recipe::where('tracking_nr', '=', $id)
+        $recipe = $this->recipes->where('tracking_nr', '=', $id)
             ->where('language', '=', Input::get('lang'))
             ->first();
 

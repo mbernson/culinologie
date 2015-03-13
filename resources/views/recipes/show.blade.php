@@ -9,7 +9,8 @@
                     @if(Session::has('return_url'))
                         <a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a>
                     @endif
-                        <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success">Bewerken</a>
+                        <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success"><i class="fa fa-edit"></i> Bewerken</a>
+                        <a href="/recipes/{{ $recipe->tracking_nr }}/fork" class="btn btn-default"><i class="fa fa-code-fork"></i> Forken</a>
                     </p>
                 </div>
 

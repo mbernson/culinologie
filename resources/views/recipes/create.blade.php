@@ -50,6 +50,7 @@
             <div class="form-group">
                 <label for="pictures">Foto</label>
                 <input type="file" name="picture" />
+                <p class="text-danger"><strong>Let op:</strong> foto upload is een b&egrave;ta feature, werking niet gegarandeerd.</p>
             </div>
 
             <input type="hidden" name="_token" value="{{ csrf_token() }}" />

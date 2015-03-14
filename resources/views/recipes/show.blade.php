@@ -5,12 +5,15 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-                    <p>
                     @if(Session::has('return_url'))
+                    <p>
                         <a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a>
+                    </p>
                     @endif
+
+                    <p>
                         <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success"><i class="fa fa-edit"></i> Bewerken</a>
-                        <a href="/recipes/{{ $recipe->tracking_nr }}/fork" class="btn btn-default"><i class="fa fa-code-fork"></i> Forken</a>
+                        <a href="/recipes/{{ $recipe->tracking_nr }}/fork?lang={{ $recipe->language }}" class="btn btn-default"><i class="fa fa-copy"></i> Kopi&euml;ren</a>
                     </p>
                 </div>
 

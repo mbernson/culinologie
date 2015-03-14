@@ -16,6 +16,7 @@ class RecipesController extends Controller {
     private $db;
 
     private static $per_page = 20;
+    private static $default_language = 'uk';
 
     public function __construct(DatabaseManager $db)
     {
@@ -149,7 +150,7 @@ class RecipesController extends Controller {
      */
     public function edit($id)
     {
-        $lang = Input::get('lang', 'uk');
+        $lang = Input::get('lang', static::$default_language);
         $recipe = Recipe::where('tracking_nr', '=', $id)
             ->where('language', '=', $lang)
             ->first();
@@ -245,6 +246,22 @@ class RecipesController extends Controller {
                 ->with('status', 'Recept verwijderd.');
         else
             return abort(500);
+    }
+
+    public function fork($tracking_nr) {
+        $lang = Input::get('lang', static::$default_language);
+        $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
+            ->where('language', '=', $lang)
+            ->first();
+
+        if(!$recipe) abort(404);
+
+        $new_recipe = $recipe->replicate();
+        // We can do this since the ingredients are converted to text anyways.
+        $new_recipe->ingredients = $recipe->ingredients;
+
+        return view('recipes.create')
+            ->with('recipe', $new_recipe);
     }
 
 }

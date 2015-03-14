@@ -64,16 +64,12 @@ class RecipesController extends Controller {
             $hide_cookbooks = true;
             $recipes->where('cookbook', '=', $cookbook_from_url);
             $params['cookbook'] = $cookbook_from_url;
-            debug('Filtering by URL cookbook', $cookbook_from_url);
         }
         elseif(Input::has('cookbook') && Input::get('cookbook') != '*') {
             $cookbook = Input::get('cookbook');
             $recipes->where('cookbook', '=', $cookbook);
             $params['cookbook'] = $cookbook;
-            debug('Filtering by cookbook param', $cookbook);
         }
-
-
 
         Session::flash('return_url', route('recipes.index', $params));
 

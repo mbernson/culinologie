@@ -5,22 +5,26 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-                    <p>
-                    @if(Session::has('return_url'))
-                        <a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a>
-                    @endif
-                        <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success">Bewerken</a>
-                    </p>
-                </div>
+            @if(Session::has('return_url'))
+            <p>
+                <a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a>
+            </p>
+            @endif
+
+            <p>
+                <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success"><i class="fa fa-edit"></i> Bewerken</a>
+                <a href="/recipes/{{ $recipe->tracking_nr }}/fork?lang={{ $recipe->language }}" class="btn btn-default"><i class="fa fa-copy"></i> Kopi&euml;ren</a>
+            </p>
+        </div>
 
         <div class="col-md-6">
-                    <h1>{{ $recipe->title }}</h1>
+            <h1>{{ $recipe->title }}</h1>
 
-                    @if($recipe->people != 0)
-                    <p>Voor {{ $recipe->people }} personen.</p>
-                    @endif
-                </div>
+            @if($recipe->people != 0)
+            <p>Voor {{ $recipe->people }} personen.</p>
+            @endif
         </div>
+    </div>
     <div class="row">
         <div class="col-md-3">
             <h2>Ingrediënten</h2>

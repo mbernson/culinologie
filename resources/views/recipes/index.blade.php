@@ -69,6 +69,7 @@
                 </tr>
                 @endforeach
             </table>
+            <p>{{ $count }} resultaten.</p>
         </div>
 	</div>
 	<div class="row">

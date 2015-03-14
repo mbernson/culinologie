@@ -3,10 +3,13 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\Cookbook;
 use Illuminate\Http\Request;
 use Input, Session;
 
 class CookbooksController extends Controller {
+
+    private static $per_page = 20;
 
     /**
      * Display a listing of the resource.
@@ -15,7 +18,13 @@ class CookbooksController extends Controller {
      */
     public function index()
     {
-        //
+        $cookbooks = Cookbook::with('owner')
+            ->orderBy('title')
+            ->orderBy('id')
+            ->paginate(self::$per_page);
+
+        return view('cookbooks.index')
+            ->withCookbooks($cookbooks);
     }
 
     /**

@@ -33,7 +33,9 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="/recipes">Recepten</a></li>
+					<li><a href="/recipes"><i class="fa fa-spoon"></i> Recepten</a></li>
+					<li><a href="/cookbooks"><i class="fa fa-book"></i> Kookboeken</a></li>
+					<li><a href="/help"><i class="fa fa-question-circle"></i> Help</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">
@@ -44,7 +46,7 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a href="/auth/logout">Logout</a></li>
+								<li><a href="/auth/logout"><i class="fa fa-sign-out"></i> Log uit</a></li>
 							</ul>
 						</li>
 					@endif

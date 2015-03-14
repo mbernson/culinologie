@@ -22,11 +22,13 @@ Route::group(['prefix' => 'cookbooks/{slug}'], function() {
 Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function() {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
+    Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
 });
 
 Route::group(['middleware' => 'auth'], function() {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
+    Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
 
     Route::resource('cookbooks', 'CookbooksController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
@@ -35,6 +37,10 @@ Route::group(['middleware' => 'auth'], function() {
 Route::resource('recipes', 'RecipesController', ['only' => ['index', 'show']]);
 
 Route::resource('cookbooks', 'CookbooksController', ['only' => ['index', 'show']]);
+
+// Help/docs
+Route::get('/help', 'DocsController@index');
+Route::get('/help/{path?}', 'DocsController@show')->where('path', '.+');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

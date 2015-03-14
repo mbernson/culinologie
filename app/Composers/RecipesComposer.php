@@ -4,11 +4,13 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Auth;
 
-final class RecipesComposer {
+final class RecipesComposer
+{
 
     private $db;
 
-    public function __construct(DatabaseManager $db) {
+    public function __construct(DatabaseManager $db)
+    {
         $this->db = $db;
     }
 
@@ -40,14 +42,16 @@ final class RecipesComposer {
         ]
     ];
 
-    public function compose(View $view) {
-        foreach($this->static_data as $k => $v) {
+    public function compose(View $view)
+    {
+        foreach ($this->static_data as $k => $v) {
             $view->with($k, $v);
         }
     }
 
-    public function categories(View $view) {
-        $view->with('categories', 
+    public function categories(View $view)
+    {
+        $view->with('categories',
             $this->db->table('recipes')
             ->select('category')
             ->groupBy('category')
@@ -57,21 +61,22 @@ final class RecipesComposer {
         );
     }
 
-    public function allCookbooks(View $view) {
-        $view->with('cookbooks', 
+    public function allCookbooks(View $view)
+    {
+        $view->with('cookbooks',
             $this->db->table('cookbooks')
             ->orderBy('id', 'desc')
             ->get()
         );
     }
 
-    public function userCookbooks(View $view) {
-        $view->with('cookbooks', 
+    public function userCookbooks(View $view)
+    {
+        $view->with('cookbooks',
             $this->db->table('cookbooks')
             ->where('user_id', '=', Auth::user()->id)
             ->orderBy('id', 'desc')
             ->get()
         );
     }
-
 }

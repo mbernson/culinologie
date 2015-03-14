@@ -2,6 +2,6 @@
 
 namespace App\Repositories;
 
-final class RecipeRepository {
-
+final class RecipeRepository
+{
 }

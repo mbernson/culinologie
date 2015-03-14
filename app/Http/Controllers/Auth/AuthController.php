@@ -6,7 +6,8 @@ use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
     private $redirectTo = '/';
 
@@ -41,18 +42,21 @@ class AuthController extends Controller {
         $this->middleware('guest', ['except' => 'getLogout']);
     }
 
-    public function getRegister() {
-        if(env('SIGNUP_ENABLED') == true)
+    public function getRegister()
+    {
+        if (env('SIGNUP_ENABLED') == true) {
             return $this->laravelGetRegister();
-        else
+        } else {
             return view('auth.register_disabled');
+        }
     }
 
-    public function postRegister(Request $request) {
-        if(env('SIGNUP_ENABLED') == true)
+    public function postRegister(Request $request)
+    {
+        if (env('SIGNUP_ENABLED') == true) {
             return $this->laravelPostRegister($request);
-        else
+        } else {
             abort(404);
+        }
     }
-
 }

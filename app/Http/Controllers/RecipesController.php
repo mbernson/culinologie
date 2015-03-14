@@ -3,16 +3,18 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\DatabaseManager;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Input, Session, Auth, Image, Request as RequestFacade;
-
+use Input;
+use Session;
+use Auth;
+use Image;
+use Request as RequestFacade;
 use App\Models\Recipe;
 use App\Models\Ingredient;
 
-class RecipesController extends Controller {
-
+class RecipesController extends Controller
+{
     private $db;
 
     private static $per_page = 20;
@@ -44,28 +46,27 @@ class RecipesController extends Controller {
             ->orderBy('created_at', 'desc');
 
         $title = null;
-        if(Input::has('title')) {
+        if (Input::has('title')) {
             $title = Input::get('title');
             $recipes->where('recipes.title', 'like', "%$title%");
             $params['title'] = $title;
         }
 
         $category = null;
-        if(Input::has('category')) {
+        if (Input::has('category')) {
             $category = Input::get('category');
-            if($category != '*') {
+            if ($category != '*') {
                 $recipes->where('category', '=', $category);
                 $params['category'] = $category;
             }
         }
 
         $hide_cookbooks = false;
-        if($cookbook_from_url != '*') {
+        if ($cookbook_from_url != '*') {
             $hide_cookbooks = true;
             $recipes->where('cookbook', '=', $cookbook_from_url);
             $params['cookbook'] = $cookbook_from_url;
-        }
-        elseif(Input::has('cookbook') && Input::get('cookbook') != '*') {
+        } elseif (Input::has('cookbook') && Input::get('cookbook') != '*') {
             $cookbook = Input::get('cookbook');
             $recipes->where('cookbook', '=', $cookbook);
             $params['cookbook'] = $cookbook;
@@ -103,13 +104,15 @@ class RecipesController extends Controller {
         $recipe = new Recipe();
         $recipe->user_id = Auth::user()->id;
 
-        if($cookbook != null)
+        if ($cookbook != null) {
             $recipe->cookbook = $cookbook;
+        }
 
-        if($this->updateRecipe($recipe))
+        if ($this->updateRecipe($recipe)) {
             return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
-        else
+        } else {
             abort(500);
+        }
     }
 
     /**
@@ -122,12 +125,15 @@ class RecipesController extends Controller {
     {
         $query = Recipe::where('tracking_nr', '=', $id);
 
-        if(Input::has('lang'))
+        if (Input::has('lang')) {
             $query->where('language', '=', Input::get('lang'));
+        }
 
         $recipe = $query->first();
 
-        if(!$recipe) abort(404);
+        if (!$recipe) {
+            abort(404);
+        }
 
         $groups = Collection::make($recipe->ingredients)->groupBy('header');
 
@@ -151,7 +157,9 @@ class RecipesController extends Controller {
             ->where('language', '=', $lang)
             ->first();
 
-        if(!$recipe) abort(404);
+        if (!$recipe) {
+            abort(404);
+        }
 
         return view('recipes.create')
             ->with('recipe', $recipe);
@@ -170,40 +178,48 @@ class RecipesController extends Controller {
             ->where('language', '=', $lang)
             ->first();
 
-        if(!$recipe) abort(404);
+        if (!$recipe) {
+            abort(404);
+        }
 
         $del = $this->db->table('ingredients')
             ->where('recipe_id', '=', $recipe->id)->delete();
 
-        if($this->updateRecipe($recipe))
+        if ($this->updateRecipe($recipe)) {
             return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
-        else
+        } else {
             abort(500);
+        }
     }
 
-    private function updateRecipe(Recipe $recipe) {
+    private function updateRecipe(Recipe $recipe)
+    {
         $input = Input::only('title', 'people', 'presentation',
             'year', 'season', 'cookbook', 'category', 'temperature', 'visibility'
         );
 
         $recipe->fill($input);
 
-        if(empty($recipe->tracking_nr))
+        if (empty($recipe->tracking_nr)) {
             $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
+        }
 
-        if(Input::has('lang'))
+        if (Input::has('lang')) {
             $recipe->language = Input::get('lang');
+        }
 
-        if(Input::has('directions'))
+        if (Input::has('directions')) {
             $recipe->description = Input::get('directions');
+        }
 
         // Override the category if the user provided one.
-        if(!empty(Input::get('category_alt')))
+        if (!empty(Input::get('category_alt'))) {
             $recipe->category = Input::get('category_alt');
+        }
 
         $saved = $recipe->save();
 
-        if(RequestFacade::hasFile('picture')) {
+        if (RequestFacade::hasFile('picture')) {
             $path = join(DIRECTORY_SEPARATOR, [
                 public_path(),
                 'uploads',
@@ -228,29 +244,39 @@ class RecipesController extends Controller {
      */
     public function destroy($id, Request $request)
     {
-        if(!Input::has('lang')) return abort(500);
+        if (!Input::has('lang')) {
+            return abort(500);
+        }
 
         $recipe = Recipe::where('tracking_nr', '=', $id)
             ->where('language', '=', Input::get('lang'))
             ->first();
 
-        if(!Auth::check()) return abort(401);
-        if($recipe->cookbook_rel->user_id != $request->user()->id) return abort(401);
+        if (!Auth::check()) {
+            return abort(401);
+        }
+        if ($recipe->cookbook_rel->user_id != $request->user()->id) {
+            return abort(401);
+        }
 
-        if($recipe->delete())
+        if ($recipe->delete()) {
             return redirect()->route('recipes.index')
                 ->with('status', 'Recept verwijderd.');
-        else
+        } else {
             return abort(500);
+        }
     }
 
-    public function fork($tracking_nr) {
+    public function fork($tracking_nr)
+    {
         $lang = Input::get('lang', static::$default_language);
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $lang)
             ->first();
 
-        if(!$recipe) abort(404);
+        if (!$recipe) {
+            abort(404);
+        }
 
         $new_recipe = $recipe->replicate();
         // We can do this since the ingredients are converted to text anyways.
@@ -259,5 +285,4 @@ class RecipesController extends Controller {
         return view('recipes.create')
             ->with('recipe', $new_recipe);
     }
-
 }

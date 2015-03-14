@@ -2,11 +2,12 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-use Storage, Parsedown;
+use Storage;
+use Parsedown;
 
-class DocsController extends Controller {
+class DocsController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -15,7 +16,7 @@ class DocsController extends Controller {
      */
     public function index()
     {
-        $content = Storage::get('docs/index.md');;
+        $content = Storage::get('docs/index.md');
         return view('docs.show')
             ->withContent(Parsedown::instance()->text($content))
             ->withTitle('Help');
@@ -23,13 +24,14 @@ class DocsController extends Controller {
 
     public function show($path)
     {
-		$parts = explode('/', $path);
+        $parts = explode('/', $path);
         $trail = $parts;
         array_unshift($parts, 'docs');
         $md_path = join('/', $parts).'.md';
 
-        if(!Storage::exists($md_path))
+        if (!Storage::exists($md_path)) {
             abort(404);
+        }
 
         $content = Storage::get($md_path);
         return view('docs.show')
@@ -37,5 +39,4 @@ class DocsController extends Controller {
             ->withTrail($trail)
             ->withTitle('Help');
     }
-
 }

@@ -27,7 +27,7 @@ class RecipesController extends Controller {
      *
      * @return Response
      */
-    public function index($cookbook = '*')
+    public function index($cookbook_from_url = '*')
     {
         $languages = Input::get('lang', ['nl', 'uk']);
         $params = [
@@ -58,23 +58,31 @@ class RecipesController extends Controller {
             }
         }
 
-        if(Input::has('cookbook')) {
-            $cookbook = Input::get('cookbook');
+        $hide_cookbooks = false;
+        if($cookbook_from_url != '*') {
+            $hide_cookbooks = true;
+            $recipes->where('cookbook', '=', $cookbook_from_url);
+            $params['cookbook'] = $cookbook_from_url;
+            debug('Filtering by URL cookbook', $cookbook_from_url);
         }
-
-        if($cookbook != '*') {
+        elseif(Input::has('cookbook') && Input::get('cookbook') != '*') {
+            $cookbook = Input::get('cookbook');
             $recipes->where('cookbook', '=', $cookbook);
             $params['cookbook'] = $cookbook;
+            debug('Filtering by cookbook param', $cookbook);
         }
+
+
 
         Session::flash('return_url', route('recipes.index', $params));
 
         return view('recipes.index')
             ->with('recipes', $recipes->paginate(static::$per_page)->appends($params))
+            ->with('count', $recipes->count())
             ->with('langs', $languages)
             ->with('title', $title)
             ->with('categories', Recipe::categories($languages))
-            ->with('hide_cookbooks', is_string($cookbook) && $cookbook != '*')
+            ->with('hide_cookbooks', $hide_cookbooks)
             ->with('params', $params);
     }
 

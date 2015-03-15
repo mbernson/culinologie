@@ -125,11 +125,15 @@ class RecipesController extends Controller
     {
         $recipes = Recipe::where('tracking_nr', '=', $id)->orderBy('language', 'asc')->get();
 
-        $language = Input::get('lang', self::$default_language);
+        $language = Input::get('lang', null);
         $recipe = false;
         foreach($recipes as $r) {
-            if($r->language == $language)
+            if ($r->language == $language) {
                 $recipe = $r;
+            } elseif ($language == null) {
+                $recipe = $r;
+                break;
+            }
         }
 
         if (!$recipe) {

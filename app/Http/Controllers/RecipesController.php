@@ -109,7 +109,7 @@ class RecipesController extends Controller
         }
 
         if ($this->updateRecipe($recipe)) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
+            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
         } else {
             abort(500);
         }
@@ -192,7 +192,7 @@ class RecipesController extends Controller
             ->where('recipe_id', '=', $recipe->id)->delete();
 
         if ($this->updateRecipe($recipe)) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr]);
+            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
         } else {
             abort(500);
         }
@@ -200,8 +200,8 @@ class RecipesController extends Controller
 
     private function updateRecipe(Recipe $recipe)
     {
-        $input = Input::only('title', 'people', 'presentation',
-            'year', 'season', 'cookbook', 'category', 'temperature', 'visibility'
+        $input = Input::only('title', 'people', 'presentation', 'year', 'season',
+            'cookbook', 'category', 'temperature', 'visibility', 'tracking_nr'
         );
 
         $recipe->fill($input);

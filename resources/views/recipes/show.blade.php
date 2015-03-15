@@ -66,12 +66,10 @@
                     <th>Zichtbaar</th>
                     <td>{{ $visibilities[$recipe->visibility] }}</td>
                 </tr>
-                <!--
                 <tr>
                     <th>Toegevoegd</th>
                     <td>{{ $recipe->updated_at->format('d M Y, H:i') }}</td>
                 </tr>
-                -->
                 <tr>
                     <th>Laatst gewijzigd</th>
                     <td>{{ $recipe->updated_at->format('d M Y, H:i') }}</td>

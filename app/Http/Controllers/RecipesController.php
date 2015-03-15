@@ -123,13 +123,14 @@ class RecipesController extends Controller
      */
     public function show($id)
     {
-        $query = Recipe::where('tracking_nr', '=', $id);
+        $recipes = Recipe::where('tracking_nr', '=', $id)->orderBy('language', 'asc')->get();
 
-        if (Input::has('lang')) {
-            $query->where('language', '=', Input::get('lang'));
+        $language = Input::get('lang', self::$default_language);
+        $recipe = false;
+        foreach($recipes as $r) {
+            if($r->language == $language)
+                $recipe = $r;
         }
-
-        $recipe = $query->first();
 
         if (!$recipe) {
             abort(404);
@@ -139,6 +140,7 @@ class RecipesController extends Controller
 
         return view('recipes.show')
             ->with('recipe', $recipe)
+            ->with('recipes', $recipes)
             ->with('cookbook', $recipe->cookbook_rel)
             ->with('ingredients', $recipe->ingredients)
             ->with('ingredient_groups', $groups);

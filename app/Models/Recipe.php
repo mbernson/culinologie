@@ -85,8 +85,8 @@ final class Recipe extends Model
     public function getImages()
     {
         return [
-            "/uploads/pictures/{$this->tracking_nr}.jpg" => 'Foto',
-            "/uploads/detail/{$this->tracking_nr}.jpg" => 'Detail foto',
+            "/uploads/pictures/{$this->tracking_nr}.jpg" => 'Overzicht',
+            "/uploads/detail/{$this->tracking_nr}.jpg" => 'Detail',
         ];
     }
 

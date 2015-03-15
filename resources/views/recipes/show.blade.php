@@ -17,7 +17,7 @@
             </p>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-9">
             <h1>{{ $recipe->title }}</h1>
 
             @if($recipe->people != 0)

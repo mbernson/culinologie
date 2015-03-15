@@ -77,21 +77,7 @@
                     <td>{{ $recipe->updated_at->format('d M Y, H:i') }}</td>
                 </tr>
             </table>
-        </div>
-
-        <div class="col-md-6">
-            <h2>Bereiding</h2>
-
-            {!! $recipe->getHtmlDescription() !!}
-
-            @if(!empty($recipe->presentation))
-            <h2>Finishing touches</h2>
-
-            {!! $recipe->getHtmlPresentation() !!}
-            @endif
-        </div>
-
-        <div class="col-md-3 sidebar">
+            
             @if(count($recipes) > 1)
             <form class="form-inline" action="/recipes/{{ $recipe->tracking_nr }}">
                 <h4>Taal</h4>
@@ -107,7 +93,21 @@
                 </div>
             </form>
             @endif
+        </div>
 
+        <div class="col-md-6">
+            <h2>Bereiding</h2>
+
+            {!! $recipe->getHtmlDescription() !!}
+
+            @if(!empty($recipe->presentation))
+            <h2>Finishing touches</h2>
+
+            {!! $recipe->getHtmlPresentation() !!}
+            @endif
+        </div>
+
+        <div class="col-md-3 sidebar">
             @if(file_exists(public_path().key($recipe->getImages())))
             <h4>Foto&#39;s</h4>
             @endif

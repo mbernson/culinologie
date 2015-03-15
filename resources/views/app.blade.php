@@ -17,6 +17,8 @@
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
+
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
 </head>
 <body>
 	<nav class="navbar navbar-default">
@@ -33,7 +35,7 @@
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="/recipes"><i class="fa fa-spoon"></i> Recepten</a></li>
+					<li><a href="/recipes"><i class="fa fa-cutlery"></i> Recepten</a></li>
 					<li><a href="/cookbooks"><i class="fa fa-book"></i> Kookboeken</a></li>
 					<li><a href="/help"><i class="fa fa-question-circle"></i> Help</a></li>
 				</ul>

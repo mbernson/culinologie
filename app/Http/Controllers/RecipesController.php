@@ -108,11 +108,7 @@ class RecipesController extends Controller
             $recipe->cookbook = $cookbook;
         }
 
-        if ($this->updateRecipe($recipe)) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
-        } else {
-            abort(500);
-        }
+        return $this->saveRecipe($recipe);
     }
 
     /**
@@ -191,14 +187,10 @@ class RecipesController extends Controller
         $del = $this->db->table('ingredients')
             ->where('recipe_id', '=', $recipe->id)->delete();
 
-        if ($this->updateRecipe($recipe)) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
-        } else {
-            abort(500);
-        }
+        return $this->saveRecipe($recipe);
     }
 
-    private function updateRecipe(Recipe $recipe)
+    private function saveRecipe(Recipe $recipe)
     {
         $input = Input::only('title', 'people', 'presentation', 'year', 'season',
             'cookbook', 'category', 'temperature', 'visibility', 'tracking_nr'
@@ -223,7 +215,13 @@ class RecipesController extends Controller
             $recipe->category = Input::get('category_alt');
         }
 
-        $saved = $recipe->save();
+        try {
+            $recipe_saved = $recipe->save();
+        } catch (\Illuminate\Database\QueryException $e) {
+            $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
+            $recipe_saved = $recipe->save();
+            Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
+        }
 
         if (RequestFacade::hasFile('picture')) {
             $path = join(DIRECTORY_SEPARATOR, [
@@ -239,7 +237,11 @@ class RecipesController extends Controller
 
         $ingredients_saved = $recipe->addIngredientsFromText(Input::get('ingredients'));
 
-        return $saved && $ingredients_saved;
+        if ($recipe_saved && $ingredients_saved) {
+            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
+        } else {
+            abort(500);
+        }
     }
 
     /**

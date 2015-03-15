@@ -9,8 +9,8 @@ final class Recipe extends Model
 {
 
     protected $fillable = ['title', 'people', 'year', 'season',
-                'description', 'presentation', 'lang',
-                'cookbook', 'category', 'temperature', 'visibility'];
+        'description', 'presentation', 'lang', 'cookbook',
+        'category', 'temperature', 'visibility', 'tracking_nr'];
 
     // Relations
 

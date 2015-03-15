@@ -43,7 +43,7 @@
             </div>
 
             <div class="form-group">
-                <label for="presentation">Finishing touches (niet verplicht)</label>
+                <label for="presentation">Finishing touches <em>(niet verplicht)</em></label>
                 <textarea name="presentation" rows="6" class="form-control">{{ $recipe->presentation }}</textarea>
             </div>
 
@@ -124,6 +124,11 @@
                     <option value="{{ $code }}" {{ $recipe->visibility === $code ? 'selected' : '' }}>{{ $v }}</option>
                     @endforeach
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label for="tracking_nr">Volgnr. <em>(niet verplicht)</em></label>
+                <input type="number" class="form-control" name="tracking_nr" value="{{ $recipe->tracking_nr }}" placeholder="Automatisch invullen" />
             </div>
 
             <button type="submit" class="btn btn-lg btn-success">Recept opslaan</button>

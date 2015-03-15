@@ -8044,6 +8044,6 @@ label,
 .panel img {
   max-width: 100%;
 }
-.center {
+.sidebar .panel {
   text-align: center;
 }

@@ -2,12 +2,13 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Models\Cookbook;
 use Illuminate\Http\Request;
-use Input, Session;
+use Input;
+use Session;
 
-class CookbooksController extends Controller {
+class CookbooksController extends Controller
+{
 
     private static $per_page = 20;
 
@@ -90,5 +91,4 @@ class CookbooksController extends Controller {
     {
         //
     }
-
 }

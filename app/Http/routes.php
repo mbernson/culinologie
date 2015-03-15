@@ -14,18 +14,18 @@
 Route::get('/', 'RecipesController@index');
 Route::get('/recipes', 'RecipesController@index');
 
-Route::group(['prefix' => 'cookbooks/{slug}'], function() {
+Route::group(['prefix' => 'cookbooks/{slug}'], function () {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['index', 'show']]);
 });
 
-Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function() {
+Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function () {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
     Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
 });
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => 'auth'], function () {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
     Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
@@ -43,6 +43,6 @@ Route::get('/help', 'DocsController@index');
 Route::get('/help/{path?}', 'DocsController@show')->where('path', '.+');
 
 Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
 ]);

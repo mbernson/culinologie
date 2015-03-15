@@ -1,10 +1,15 @@
 <?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasVisibilities;
 
-final class Cookbook extends Model {
+final class Cookbook extends Model
+{
 
-    public function owner() {
+    use HasVisibilities;
+
+    public function owner()
+    {
         return $this->belongsTo('App\User', 'user_id');
     }
 

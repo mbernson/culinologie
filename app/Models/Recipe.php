@@ -8,10 +8,6 @@ use Parsedown;
 final class Recipe extends Model
 {
 
-    const VISIBILITY_PUBLIC = 0;
-    const VISIBILITY_PRIVATE = 1;
-    const VISIBILITY_LOGGED_IN = 2;
-
     protected $fillable = ['title', 'people', 'year', 'season',
                 'description', 'presentation', 'lang',
                 'cookbook', 'category', 'temperature', 'visibility'];

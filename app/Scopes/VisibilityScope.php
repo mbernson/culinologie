@@ -4,11 +4,24 @@ use Illuminate\Database\Eloquent\ScopeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-use App\Models\Recipe;
 use Auth;
 
+/**
+ * Visibility scope
+ *
+ * This is an Eloquent scope that can (globally) restrict access to a model.
+ *
+ * Assumptions:
+ *
+ * - The model has a `visibility` column of an integer type.
+ * - The model has a `user_id` column that refers to a user model.
+ */
 final class VisibilityScope implements ScopeInterface
 {
+
+    const VISIBILITY_PUBLIC = 0;
+    const VISIBILITY_PRIVATE = 1;
+    const VISIBILITY_LOGGED_IN = 2;
 
     public function apply(Builder $builder, Model $model)
     {
@@ -21,18 +34,18 @@ final class VisibilityScope implements ScopeInterface
 
     public function applyPublicScope(Builder $query)
     {
-        return $query->where('visibility', '=', Recipe::VISIBILITY_PUBLIC);
+        return $query->where('visibility', '=', self::VISIBILITY_PUBLIC);
     }
 
     public function applyLoggedInScope(Builder $query, User $user)
     {
         $isPrivate = function ($query) use ($user) {
-            $query->where('visibility', '=', Recipe::VISIBILITY_PRIVATE)
+            $query->where('visibility', '=', self::VISIBILITY_PRIVATE)
                   ->where('user_id', '=', $user->id);
         };
 
         $whereVisible = function ($query) use ($isPrivate) {
-            $query->whereIn('visibility', [Recipe::VISIBILITY_PUBLIC, Recipe::VISIBILITY_LOGGED_IN])
+            $query->whereIn('visibility', [self::VISIBILITY_PUBLIC, self::VISIBILITY_LOGGED_IN])
                   ->orWhere($isPrivate);
         };
 
@@ -43,4 +56,5 @@ final class VisibilityScope implements ScopeInterface
     {
         // TODO: Implement me
     }
+
 }

@@ -3,7 +3,9 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Cookbook;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Auth;
 use Input;
 use Session;
 
@@ -43,9 +45,25 @@ class CookbooksController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        //
+        $title = Input::get('title');
+
+        $cookbook = new Cookbook([
+            'title' => $title,
+            'slug' => Str::slug($title),
+        ]);
+        $cookbook->user_id = Auth::user()->id;
+
+        $this->validate($request, [
+            'title' => 'required|max:255',
+        ]);
+
+        if ($cookbook->save()) {
+            return redirect()->route('cookbooks.index')->with('status', 'Kookboek aangemaakt.');
+        } else {
+            abort(500);
+        }
     }
 
     /**

@@ -51,7 +51,7 @@
 		<div class="col-sm-8 col-md-9 col-lg-10">
             <h1>Recepten</h1>
             @if(Auth::check())
-            <p> <a class="btn btn-success" href="/recipes/create" role="button">Nieuw recept</a> </p>
+            <p> <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a> </p>
             @endif
             <table class="table table-striped table-bordered">
                 <tr>

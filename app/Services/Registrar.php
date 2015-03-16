@@ -1,8 +1,10 @@
 <?php namespace App\Services;
 
 use App\User;
+use App\Models\Cookbook;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
+use Illuminate\Support\Str;
 
 class Registrar implements RegistrarContract
 {
@@ -30,10 +32,19 @@ class Registrar implements RegistrarContract
      */
     public function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+        
+        $title = "{$data['name']} kookboek";
+        Cookbook::create([
+            'title' => $title,
+            'slug' => Str::slug($title),
+            'user_id' => $user->id,
+        ]);
+
+        return $user;
     }
 }

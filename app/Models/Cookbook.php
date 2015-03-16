@@ -8,6 +8,10 @@ final class Cookbook extends Model
 
     use HasVisibilities;
 
+    protected $fillable = ['title', 'slug'];
+
+    public $timestamps = false;
+
     public function owner()
     {
         return $this->belongsTo('App\User', 'user_id');

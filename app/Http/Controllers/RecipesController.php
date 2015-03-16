@@ -13,6 +13,73 @@ use Request as RequestFacade;
 use App\Models\Recipe;
 use App\Models\Ingredient;
 
+final class RecipesSearch {
+    private $params = [
+        'cookbook' => null,
+        'category' => null,
+        'title' => null,
+        'query' => null,
+    ];
+
+    private $cookbook = '*';
+
+    public function __construct(array $params = []) {
+        $this->params = array_merge($this->params, $params);
+    }
+
+    public function buildQuery($query = null) {
+        if ($query == null) {
+            $query = Recipe::query();
+        }
+
+        if (Input::has('query')) {
+            $term = Input::get('query');
+            $query->where(function($q) use ($term) {
+                $q->where('recipes.description', 'like', "%$term%")
+                  ->orWhere('recipes.presentation', 'like', "%$term%");
+            });
+            $this->params['query'] = $term;
+        }
+
+        if (Input::has('title')) {
+            $title = Input::get('title');
+            $query->where('recipes.title', 'like', "%$title%");
+            $this->params['title'] = $title;
+        }
+
+        if (Input::has('category')) {
+            $category = Input::get('category');
+            if ($category != '*') {
+                $query->where('category', '=', $category);
+                $this->params['category'] = $category;
+            }
+        }
+
+        if ($this->cookbook != '*') {
+            $query->where('cookbook', '=', $this->cookbook);
+            $this->params['cookbook'] = $this->cookbook;
+        } elseif (Input::has('cookbook') && Input::get('cookbook') != '*') {
+            $cookbook = Input::get('cookbook');
+            $query->where('cookbook', '=', $cookbook);
+            $this->params['cookbook'] = $cookbook;
+        }
+
+        return $query;
+    }
+
+    public function shouldHideCookbooks() {
+        return $this->cookbook != '*';
+    }
+
+    public function setCookbook($cookbook) {
+        $this->cookbook = $cookbook;
+    }
+
+    public function getParams() {
+        return $this->params;
+    }
+}
+
 class RecipesController extends Controller
 {
     private $db;
@@ -30,58 +97,35 @@ class RecipesController extends Controller
      *
      * @return Response
      */
-    public function index($cookbook_from_url = '*')
+    public function index($cookbook = '*')
     {
-        $languages = Input::get('lang', ['nl']);
-        $params = [
-            'lang[]' => $languages,
-            'cookbook' => null,
-            'category' => null,
-            'title' => null,
-        ];
+        $languages = Input::get('lang', ['nl', 'uk']);
+        $search = new RecipesSearch();
+        $search->setCookbook($cookbook);
 
-        $recipes = Recipe::select('tracking_nr', 'title', 'category', 'cookbook', 'language')
+        $recipes = $search->buildQuery()
+            ->select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')
+            ->paginate(static::$per_page)
+            ->appends($search->getParams());
 
-        $title = null;
-        if (Input::has('title')) {
-            $title = Input::get('title');
-            $recipes->where('recipes.title', 'like', "%$title%");
-            $params['title'] = $title;
-        }
+        Session::flash('return_url', route('recipes.index', $search->getParams()));
 
-        $category = null;
-        if (Input::has('category')) {
-            $category = Input::get('category');
-            if ($category != '*') {
-                $recipes->where('category', '=', $category);
-                $params['category'] = $category;
-            }
-        }
-
-        $hide_cookbooks = false;
-        if ($cookbook_from_url != '*') {
-            $hide_cookbooks = true;
-            $recipes->where('cookbook', '=', $cookbook_from_url);
-            $params['cookbook'] = $cookbook_from_url;
-        } elseif (Input::has('cookbook') && Input::get('cookbook') != '*') {
-            $cookbook = Input::get('cookbook');
-            $recipes->where('cookbook', '=', $cookbook);
-            $params['cookbook'] = $cookbook;
-        }
-
-        Session::flash('return_url', route('recipes.index', $params));
+        $available_languages = $search->buildQuery()
+            ->select('language')->distinct()
+            ->orderBy('language', 'desc')
+            ->get()->lists('language');
 
         return view('recipes.index')
-            ->with('recipes', $recipes->paginate(static::$per_page)->appends($params))
+            ->with('recipes', $recipes)
             ->with('count', $recipes->count())
-            ->with('langs', $languages)
-            ->with('title', $title)
+            ->with('chosen_languages', $languages)
+            ->with('available_languages', $available_languages)
             ->with('categories', Recipe::categories($languages))
-            ->with('hide_cookbooks', $hide_cookbooks)
-            ->with('params', $params);
+            ->with('hide_cookbooks', $search->shouldHideCookbooks())
+            ->with('params', $search->getParams());
     }
 
     /**

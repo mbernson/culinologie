@@ -2,15 +2,37 @@
 
 @section('content')
 
-<div class="container-fluid">
+<div class="container">
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-12">
             <h1>Kookboeken</h1>
 
             @if(Auth::check())
-            <!--
-            <p> <a class="btn btn-success" href="/cookbooks/create" role="button">Nieuw kookboek</a> </p>
-            -->
+            <p><a class="btn btn-success" data-toggle="collapse" href="#cookbookform" aria-expanded="false" aria-controls="cookbookform" role="button"><i class="fa fa-plus"></i> Nieuw kookboek</a> </p>
+            <div class="collapse" id="cookbookform">
+                <div class="well">
+                    <form method="post" action="/cookbooks">
+                        <div class="form-group">
+                            <label for="title">Titel</label>
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Mijn recepten">
+                        </div>
+
+                        <!--
+                        <div class="form-group">
+                            <label for="visibility">Zichtbaarheid</label>
+                            <select name="visibility">
+                                <option value="public">Voor iedereen</option>
+                                <option value="logged_in">Alleen ingelogde gebruikers</option>
+                                <option value="private">Alleen voor mijzelf</option>
+                            </select>
+                        </div>
+                        -->
+
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="btn btn-primary">Kookboek aanmaken</button>
+                    </form>
+                </div>
+            </div>
             @endif
 
             <table class="table table-striped table-bordered">

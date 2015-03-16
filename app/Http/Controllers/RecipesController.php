@@ -107,8 +107,9 @@ class RecipesController extends Controller
             ->select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('tracking_nr', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->paginate(static::$per_page)
+            ->orderBy('created_at', 'desc');
+        $count = $recipes->count();
+        $recipes = $recipes->paginate(static::$per_page)
             ->appends($search->getParams());
 
         Session::flash('return_url', route('recipes.index', $search->getParams()));
@@ -120,7 +121,7 @@ class RecipesController extends Controller
 
         return view('recipes.index')
             ->with('recipes', $recipes)
-            ->with('count', $recipes->count())
+            ->with('count', $count)
             ->with('chosen_languages', $languages)
             ->with('available_languages', $available_languages)
             ->with('categories', Recipe::categories($languages))

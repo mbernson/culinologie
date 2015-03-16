@@ -3,6 +3,7 @@
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Auth;
+use App\Models\Cookbook;
 
 final class RecipesComposer
 {
@@ -21,6 +22,10 @@ final class RecipesComposer
             'us' => 'Engels (Amerikaans)',
             'cs' => 'Spaans',
             'ct' => 'Catalaans',
+            'fr' => 'Frans',
+            'de' => 'Duits',
+            'pl' => 'Pools',
+            'pt' => 'Portugees',
         ],
         'visibilities' => [
             0 => 'Voor iedereen',
@@ -64,7 +69,7 @@ final class RecipesComposer
     public function allCookbooks(View $view)
     {
         $view->with('cookbooks',
-            $this->db->table('cookbooks')
+            Cookbook::select('id', 'title', 'slug')
             ->orderBy('id', 'desc')
             ->get()
         );

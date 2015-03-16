@@ -33,10 +33,12 @@ final class Recipe extends Model
     public static function categories(array $languages)
     {
         return static::select('category')
+            ->distinct()
             ->whereIn('language', $languages)
+            ->whereRaw('category is not null')
+            ->where('category', '!=', '')
             ->orderBy('category')
             ->orderBy('language')
-            ->groupBy('category')
             ->lists('category');
     }
 

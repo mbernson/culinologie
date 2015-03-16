@@ -9,14 +9,14 @@
             <form>
                 <div class="form-group">
                     <label for="title">Titel</label>
-                    <input type="text" class="form-control" name="title" placeholder="Match titel" value="{{ $title }}" />
+                    <input type="text" class="form-control" name="title" placeholder="Match titel" value="{{ $params['title'] }}" />
                 </div>
 
                 <div class="form-group">
                     <label for="lang[]">Taal</label>
                     <select multiple class="form-control" name="lang[]">
-                        @foreach($languages as $code => $lang)
-                        <option value="{{ $code }}" {{ in_array($code, $langs) ? 'selected' : '' }}>{{ $lang }}</option>
+                        @foreach($available_languages as $code)
+                        <option value="{{ $code }}" {{ in_array($code, $chosen_languages) ? 'selected' : '' }}>{{ $languages[$code] or $code }}</option>
                         @endforeach
                     </select>
                 </div>

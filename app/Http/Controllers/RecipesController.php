@@ -18,6 +18,7 @@ final class RecipesSearch {
         'cookbook' => null,
         'category' => null,
         'title' => null,
+        'query' => null,
     ];
 
     private $cookbook = '*';
@@ -29,6 +30,15 @@ final class RecipesSearch {
     public function buildQuery($query = null) {
         if ($query == null) {
             $query = Recipe::query();
+        }
+
+        if (Input::has('query')) {
+            $term = Input::get('query');
+            $query->where(function($q) use ($term) {
+                $q->where('recipes.description', 'like', "%$term%")
+                  ->orWhere('recipes.presentation', 'like', "%$term%");
+            });
+            $this->params['query'] = $term;
         }
 
         if (Input::has('title')) {

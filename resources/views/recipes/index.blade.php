@@ -8,12 +8,12 @@
             <h3>Filters</h3>
             <form>
                 <div class="form-group">
-                    <label for="query">Titel</label>
-                    <input type="text" class="form-control" name="title" placeholder="Zoek op titel" value="{{ $params['title'] }}" />
+                    <label for="query">Zoek op titel</label>
+                    <input type="text" class="form-control" name="title" placeholder="Titel" value="{{ $params['title'] }}" />
                 </div>
 
                 <div class="form-group">
-                    <label for="query">Inhoud</label>
+                    <label for="query">Zoek op inhoud</label>
                     <input type="text" class="form-control" name="query" placeholder="Zoekwoord" value="{{ $params['query'] }}" />
                 </div>
 

@@ -1,5 +1,8 @@
 -- Triggers om de recepten telling bij te werken.
 
+DROP TRIGGER IF EXISTS cookbooks_recipes_sum_insert;
+DROP TRIGGER IF EXISTS cookbooks_recipes_sum_delete;
+
 delimiter //
 
 CREATE TRIGGER cookbooks_recipes_sum_insert AFTER INSERT ON recipes

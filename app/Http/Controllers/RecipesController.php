@@ -106,11 +106,13 @@ class RecipesController extends Controller
         $recipes = $search->buildQuery()
             ->select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
-            ->orderBy('tracking_nr', 'asc')
             ->orderBy('created_at', 'desc');
         $count = $recipes->count();
+        $url_params = array_merge($search->getParams(), [
+            'lang[]' => $languages,
+        ]);
         $recipes = $recipes->paginate(static::$per_page)
-            ->appends($search->getParams());
+            ->appends($url_params);
 
         Session::flash('return_url', route('recipes.index', $search->getParams()));
 
@@ -164,7 +166,8 @@ class RecipesController extends Controller
      */
     public function show($id)
     {
-        $recipes = Recipe::where('tracking_nr', '=', $id)->orderBy('language', 'asc')->get();
+        $recipes = Recipe::where('tracking_nr', '=', $id)
+            ->orderBy('language', 'asc')->get();
 
         $language = Input::get('lang', null);
         $recipe = false;

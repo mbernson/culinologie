@@ -59,5 +59,4 @@ final class VisibilityScope implements ScopeInterface
     {
         // TODO: Implement me
     }
-
 }

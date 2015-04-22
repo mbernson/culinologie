@@ -1,27 +1,30 @@
 <?php
 
 // http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
-function startsWith($haystack, $needle) {
+function startsWith($haystack, $needle)
+{
     // search backwards starting from haystack length characters from the end
-    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== false;
 }
 
-function endsWith($haystack, $needle) {
+function endsWith($haystack, $needle)
+{
     // search forward starting from end minus needle length characters
-    return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== FALSE;
+    return $needle === "" || strpos($haystack, $needle, strlen($haystack) - strlen($needle)) !== false;
 }
 
-function el_bulli_string_decode($str) {
+function el_bulli_string_decode($str)
+{
     $result = [];
 
     $items = explode("\n&", $str);
 
-    foreach($items as $item) {
+    foreach ($items as $item) {
         $parts = explode('=', trim($item));
         try {
             $key = trim($parts[0]);
             $value = trim($parts[1]);
-        } catch(ErrorException $e) {
+        } catch (ErrorException $e) {
             echo "ITEM:\n\n";
             var_dump($item);
             echo "PARTS:\n\n";
@@ -29,7 +32,7 @@ function el_bulli_string_decode($str) {
             throw $e;
         }
 
-        if(empty($key)) {
+        if (empty($key)) {
             $inter = var_export($result);
             throw new Exception("Invalid key for recipe string: [[[$item]]]\nIntermediate value: [[[$inter)]]]");
         }
@@ -40,14 +43,16 @@ function el_bulli_string_decode($str) {
     return $result;
 }
 
-class ElBulliIngredient {
+class ElBulliIngredient
+{
     public $recipe_id;
     public $text = '';
     public $amount;
     public $unit;
     public $header;
 
-    public function __construct($text, $header = null, $recipe_id = null) {
+    public function __construct($text, $header = null, $recipe_id = null)
+    {
         $this->text = $text;
         $this->header = $header;
         $this->recipe_id = $recipe_id;
@@ -55,25 +60,29 @@ class ElBulliIngredient {
         $this->parse_unit();
     }
 
-    public function append($str) {
+    public function append($str)
+    {
         $this->text .= ' ' . $str;
     }
 
-    private function parse_amount() {
+    private function parse_amount()
+    {
         $matches = [];
-        if(preg_match('/^[\d|\.|,]+/', $this->text, $matches)) {
+        if (preg_match('/^[\d|\.|,]+/', $this->text, $matches)) {
             $this->amount = $matches[0];
         }
     }
 
-    private function parse_unit() {
+    private function parse_unit()
+    {
         $matches = [];
-        if(preg_match('/^[\d|\.|,]+\ ?\w\ /', $this->text, $matches)) {
+        if (preg_match('/^[\d|\.|,]+\ ?\w\ /', $this->text, $matches)) {
             $this->unit = substr(trim($matches[0]), -1);
         }
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return [
             'recipe_id' => $this->recipe_id,
             'text' => $this->text,
@@ -83,13 +92,14 @@ class ElBulliIngredient {
         ];
     }
 
-    public function insert() {
+    public function insert()
+    {
         DB::table('ingredients')->insert($this->toArray());
     }
-
 }
 
-class ElBulliRecipe {
+class ElBulliRecipe
+{
     // Reserved
     private $str;
     private $data = [];
@@ -111,11 +121,13 @@ class ElBulliRecipe {
 
     public $ingredients = [];
 
-    public function __construct($str, array $defaults = [], $iconv = true) {
-        if($iconv == true)
+    public function __construct($str, array $defaults = [], $iconv = true)
+    {
+        if ($iconv == true) {
             $this->str = iconv('utf-16le', 'utf-8', $str);
-        else
+        } else {
             $this->str = $str;
+        }
 
         $this->data = el_bulli_string_decode($this->str);
         $this->assign_defaults($defaults);
@@ -143,29 +155,34 @@ class ElBulliRecipe {
     /**
      * Assign common, single-valued attributes.
      */
-    private function assign_attributes() {
-        foreach(static::$assignments as $k => $v) {
-            if(array_key_exists($k, $this->data))
+    private function assign_attributes()
+    {
+        foreach (static::$assignments as $k => $v) {
+            if (array_key_exists($k, $this->data)) {
                 $this->$v = $this->data[$k];
+            }
         }
     }
 
-    private function assign_defaults(array $params) {
-        foreach($params as $k => $v) {
-            if(property_exists($this, $k))
+    private function assign_defaults(array $params)
+    {
+        foreach ($params as $k => $v) {
+            if (property_exists($this, $k)) {
                 $this->$k = $v;
+            }
         }
     }
 
     /**
      * Populate the ingredients array.
      */
-    private function assign_ingredients() {
+    private function assign_ingredients()
+    {
         $current_header = null;
-        foreach($this->data as $k => $v) {
-            if(startsWith($k, 'titolelaboracio')) {
+        foreach ($this->data as $k => $v) {
+            if (startsWith($k, 'titolelaboracio')) {
                 $current_header = $this->data[$k];
-            } elseif(startsWith($k, 'ingredientselaboracio')) {
+            } elseif (startsWith($k, 'ingredientselaboracio')) {
                 $this->addIngredient($this->data[$k], $current_header);
             }
         }
@@ -174,14 +191,17 @@ class ElBulliRecipe {
     /**
      * Push a new ingredient to the end of the list.
      */
-    public function addIngredient($str, $header) {
+    public function addIngredient($str, $header)
+    {
         $parts = explode($this->getSeparator(), $str);
-        foreach($parts as $ingredient) {
+        foreach ($parts as $ingredient) {
             $ingredient = trim($ingredient);
-            if(empty($ingredient)) continue;
+            if (empty($ingredient)) {
+                continue;
+            }
 
             // Append if the ingredient contains a closing paren ')' and no opening paren '('.
-            if(preg_match('/^([^\(]+)(\)){1}$/', $ingredient) == 1 ||
+            if (preg_match('/^([^\(]+)(\)){1}$/', $ingredient) == 1 ||
                     substr($ingredient, 0, 1) == '(') {
                 end($this->ingredients);
                 $last = key($this->ingredients);
@@ -195,55 +215,63 @@ class ElBulliRecipe {
     /**
      * Build the recipe description.
      */
-    private function assign_description() {
+    private function assign_description()
+    {
         // descripcio
-        foreach($this->data as $k => $v) {
-            if(startsWith($k, 'titolelaboracio')) {
+        foreach ($this->data as $k => $v) {
+            if (startsWith($k, 'titolelaboracio')) {
                 $head = $this->data[$k];
                 $this->description .= "### $head\n\n";
-            } elseif(startsWith($k, 'descripcioelaboracio')) {
+            } elseif (startsWith($k, 'descripcioelaboracio')) {
                 $desc = $this->data[$k];
                 $desc = str_replace($this->getSeparator(), "\n", $desc);
                 $this->description .= $desc;
                 $this->description .= "\n\n";
             }
         }
-        if(!empty($this->description))
+        if (!empty($this->description)) {
             $this->description = trim($this->description);
+        }
     }
 
-    private function assign_presentation() {
+    private function assign_presentation()
+    {
         // acabatipresentacio
-        if(array_key_exists('acabatipresentacio', $this->data)) {
+        if (array_key_exists('acabatipresentacio', $this->data)) {
             $pres = $this->data['acabatipresentacio'];
             $pres = str_replace($this->getSeparator(), "\n", $pres);
             $this->presentation = $pres;
         }
     }
 
-    private function assign_id() {
+    private function assign_id()
+    {
         $id_line = strtok($this->str, "\n");
         $parts = explode('=', $id_line);
         $id = trim($parts[1]);
-        if(!empty($id))
+        if (!empty($id)) {
             $this->id = $id;
+        }
     }
 
     /**
      * Get the character (sequence) used to split the lines
      * of recipes and ingredients.
      */
-    private function getSeparator() {
-        switch($this->cookbook) {
+    private function getSeparator()
+    {
+        switch ($this->cookbook) {
         case 'elBulli1994-1997':
-            if($this->language != 'cs')
+            if ($this->language != 'cs') {
                 return '<br>';
+            }
         default:
             return '#';
         }
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return [
             'id' => $this->id,
             'cookbook' => $this->cookbook,
@@ -260,7 +288,8 @@ class ElBulliRecipe {
         ];
     }
 
-    public function toDatabaseArray() {
+    public function toDatabaseArray()
+    {
         return [
             'elbulli_nr' => $this->id,
             'cookbook' => $this->cookbook,
@@ -276,16 +305,18 @@ class ElBulliRecipe {
         ];
     }
 
-    public function insert() {
+    public function insert()
+    {
         $id = DB::table('recipes')->insertGetId($this->toDatabaseArray());
-        foreach($this->ingredients as $ingredient) {
+        foreach ($this->ingredients as $ingredient) {
             $ingredient->recipe_id = $id;
             $ingredient->insert();
         }
         echo "Saved recipe '$this->title'\nWith id: $id\n";
     }
 
-    public function dump() {
+    public function dump()
+    {
         echo "\n========== BEGIN RECIPE TEXT ==========\n";
         echo $this->description;
         echo "\n========== BEGIN PRESENTATION ==========\n";
@@ -293,11 +324,13 @@ class ElBulliRecipe {
         echo "\n=========== END RECIPE TEXT ===========\n";
     }
 
-    public function toMarkdown() {
+    public function toMarkdown()
+    {
         $md = "# $this->title\n\n";
         $md .= "## Ingredients\n\n";
-        foreach($this->ingredients as $in)
+        foreach ($this->ingredients as $in) {
             $md .= '* ' . $in . "\n";
+        }
         $md .= "\n";
         $md .= "## Preparation\n\n";
         $md .= $this->description;
@@ -307,4 +340,3 @@ class ElBulliRecipe {
         return $md;
     }
 }
-

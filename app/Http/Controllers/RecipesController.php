@@ -13,7 +13,8 @@ use Request as RequestFacade;
 use App\Models\Recipe;
 use App\Models\Ingredient;
 
-final class RecipesSearch {
+final class RecipesSearch
+{
     private $params = [
         'cookbook' => null,
         'category' => null,
@@ -23,18 +24,20 @@ final class RecipesSearch {
 
     private $cookbook = '*';
 
-    public function __construct(array $params = []) {
+    public function __construct(array $params = [])
+    {
         $this->params = array_merge($this->params, $params);
     }
 
-    public function buildQuery($query = null) {
+    public function buildQuery($query = null)
+    {
         if ($query == null) {
             $query = Recipe::query();
         }
 
         if (Input::has('query')) {
             $term = Input::get('query');
-            $query->where(function($q) use ($term) {
+            $query->where(function ($q) use ($term) {
                 $q->where('recipes.description', 'like', "%$term%")
                   ->orWhere('recipes.presentation', 'like', "%$term%");
             });
@@ -67,15 +70,18 @@ final class RecipesSearch {
         return $query;
     }
 
-    public function shouldHideCookbooks() {
+    public function shouldHideCookbooks()
+    {
         return $this->cookbook != '*';
     }
 
-    public function setCookbook($cookbook) {
+    public function setCookbook($cookbook)
+    {
         $this->cookbook = $cookbook;
     }
 
-    public function getParams() {
+    public function getParams()
+    {
         return $this->params;
     }
 }
@@ -171,7 +177,7 @@ class RecipesController extends Controller
 
         $language = Input::get('lang', null);
         $recipe = false;
-        foreach($recipes as $r) {
+        foreach ($recipes as $r) {
             if ($r->language == $language) {
                 $recipe = $r;
             } elseif ($language == null) {

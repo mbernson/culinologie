@@ -1,19 +1,26 @@
-# Culinologie
+# Culinology
 
-Dit is een implementatie van project IPSEN4, opdracht "Culinologie", als web-applicatie.
-Het is gebouwd met het Laravel framework, versie 5.
+This is a web-based cookbook application, built for a project at the 
+[University of applied sciences, Leiden](http://www.hsleiden.nl/informatica).
+The application lets people store and manage share and print their cooking recipes.
+
+The project is built with Laravel 5 and MySQL.
 
 ## Setup
 
-In het kort:
+Brief setup steps:
 
-1. Creëer een MySQL-database, en importeer op volgorde de bestanden in de map `sql/`. Er worden geen *migrations* gebruikt in dit project.
-2. Configureer de database connectie in `.env`.
+1. Create a MySQL database, and import the files in the `sql/` directory. Migrations are not used in this project.
+2. Copy `.env.example` to `.env` and configure the database connection there.
+3. Point a virtual host to the `public/` directory and view the site.
 
 ## Development
 
-* Als je de less stylesheet(s) hebt aangepast, gebruik dan het commando `gulp` om deze te compileren.
+**TODO**: Set up a Vagrant box for development.
 
-## Licentie
+* The `gulp` command will re-compile the LESS/SASS stylesheets.
 
-T.b.d.
+## License
+
+As agreed with the client, this project was released as open source on april 30th,
+2015. It is licensed under the GPL v2 license. Refer to the `LICENSE.txt` file for this.

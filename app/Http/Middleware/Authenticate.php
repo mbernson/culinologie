@@ -1,6 +1,7 @@
 <?php namespace App\Http\Middleware;
 
 use Closure;
+use Auth;
 use Illuminate\Contracts\Auth\Guard;
 
 class Authenticate
@@ -34,13 +35,21 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         if ($this->auth->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('auth/login');
-            }
+            return $this->deny($request);
+        }
+
+        if (! Auth::user()->isApproved()) {
+            return redirect()->back()->with('warning', 'Je account moet goedgekeurd zijn om dat te kunnen doen.');
         }
 
         return $next($request);
+    }
+
+    protected function deny($request) {
+        if ($request->ajax()) {
+            return response('Unauthorized.', 401);
+        } else {
+            return redirect()->guest('auth/login');
+        }
     }
 }

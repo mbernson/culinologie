@@ -4,12 +4,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Validator;
+use Auth;
 use App\Models\Cookbook, App\User;
 
 class AuthController extends Controller
 {
 
-    private $redirectTo = '/';
+    protected $redirectPath = '/';
 
     /*
     |--------------------------------------------------------------------------
@@ -24,7 +25,6 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers {
         getRegister as laravelGetRegister;
-        postRegister as laravelPostRegister;
     }
 
     /**
@@ -53,18 +53,14 @@ class AuthController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param Request $request
      * @return User
      */
-    public function create(array $data)
+    public function create(Request $request)
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $user = User::create($request->only('name', 'email', 'password'));
 
-        $title = "{$data['name']} kookboek";
+        $title = "{$user->name} kookboek";
         Cookbook::create([
             'title' => $title,
             'slug' => str_slug($title),
@@ -83,12 +79,27 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function postRegister(Request $request)
     {
-        if (env('SIGNUP_ENABLED') == true) {
-            return $this->laravelPostRegister($request);
-        } else {
-            abort(404);
+        if (env('SIGNUP_ENABLED') != true) {
+            return abort(404);
         }
+
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        Auth::login($this->create($request));
+
+        return redirect()->to('/')
+            ->with('status', 'Bedankt voor je aanmelding! Let op: pas als je account is goedgekeurd kun je recepten aanmaken.');
     }
 }

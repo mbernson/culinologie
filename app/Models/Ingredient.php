@@ -43,8 +43,15 @@ final class Ingredient extends Model
     private function parse_unit()
     {
         $matches = [];
-        if (preg_match('/^[\d|\.|,]+\ ?\w\ /', $this->text, $matches)) {
-            $this->unit = substr(trim($matches[0]), -1);
+        if (preg_match('/^[\d|\.|,]+\ ?\w+\ /', $this->text, $matches)) {
+            $parts = explode(' ', trim($matches[0]));
+            if(count($parts) == 1) {
+                preg_match('/[A-Za-z]+/', $parts[0], $matches);
+                $this->unit = $matches[0];
+            } elseif(count($parts) > 1) {
+                $this->unit = $parts[1];
+            }
         }
     }
+
 }

@@ -59,30 +59,30 @@ final class Recipe extends Model
         return join("\n", $this->ingredients->lists('text')->all());
     }
 
-    private function parseIngredients() {
-
-    }
-
-    public function addIngredientsFromText($text)
-    {
-        if (empty($text)) {
-            return true;
-        }
-
+    public static function parseIngredientsFromText($text) {
         $header = null;
         $ingredients = [];
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $text) as $line) {
             $line = trim($line);
 
-            if (preg_match('/^###?#? ?[\w|\d| ]+ ?$/', $line)) {
-                $header = trim(preg_replace('/^###?#? /', '', $line));
+            if (preg_match('/^###?#? ?[\w|\d| ]+/', $line)) {
+                $header = trim(preg_replace('/^###?#?/', '', $line));
             } else {
                 $ingredients[] = Ingredient::createFromLine($line, $header);
             }
         }
 
-        return $this->ingredients()->saveMany($ingredients);
+        return $ingredients;
+    }
+
+    public function saveIngredientsFromText($text)
+    {
+        if (empty($text)) {
+            return true;
+        }
+
+        return $this->ingredients()->saveMany(static::parseIngredientsFromText($text));
     }
 
     public function getImages()

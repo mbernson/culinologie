@@ -10,8 +10,7 @@ use Session;
 use Auth;
 use Image;
 use Request as RequestFacade;
-use App\Models\Recipe;
-use App\Models\Ingredient;
+use App\Models\Recipe, App\Models\Ingredient;
 
 final class RecipesSearch
 {
@@ -238,7 +237,7 @@ class RecipesController extends Controller
             abort(404);
         }
 
-        $del = $this->db->table('ingredients')
+        $this->db->table('ingredients')
             ->where('recipe_id', '=', $recipe->id)->delete();
 
         return $this->saveRecipe($recipe);
@@ -289,7 +288,7 @@ class RecipesController extends Controller
             $image->save($path.DIRECTORY_SEPARATOR.$filename);
         }
 
-        $ingredients_saved = $recipe->addIngredientsFromText(Input::get('ingredients'));
+        $ingredients_saved = $recipe->saveIngredientsFromText(Input::get('ingredients'));
 
         if ($recipe_saved && $ingredients_saved) {
             return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);

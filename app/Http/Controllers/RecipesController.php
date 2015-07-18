@@ -89,8 +89,8 @@ class RecipesController extends Controller
 {
     private $db;
 
-    private static $per_page = 20;
-    private static $default_language = 'uk';
+    private static $per_page = 25;
+    private static $default_language = 'nl';
 
     public function __construct(DatabaseManager $db)
     {

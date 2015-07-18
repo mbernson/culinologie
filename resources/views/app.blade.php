@@ -37,6 +37,9 @@
 				<ul class="nav navbar-nav">
 					<li><a href="/recipes"><i class="fa fa-cutlery"></i> Recepten</a></li>
 					<li><a href="/cookbooks"><i class="fa fa-book"></i> Kookboeken</a></li>
+                    @if(Auth::check() && Auth::user()->isAdmin())
+                    <li><a href="/users"><i class="fa fa-user"></i> Gebruikers</a></li>
+                    @endif
 					<li><a href="/help"><i class="fa fa-question-circle"></i> Help</a></li>
 				</ul>
 

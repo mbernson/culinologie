@@ -17,17 +17,6 @@
                             <input type="text" class="form-control" name="title" id="title" placeholder="Mijn recepten">
                         </div>
 
-                        <!--
-                        <div class="form-group">
-                            <label for="visibility">Zichtbaarheid</label>
-                            <select name="visibility">
-                                <option value="public">Voor iedereen</option>
-                                <option value="logged_in">Alleen ingelogde gebruikers</option>
-                                <option value="private">Alleen voor mijzelf</option>
-                            </select>
-                        </div>
-                        -->
-
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <button type="submit" class="btn btn-primary">Kookboek aanmaken</button>
                     </form>

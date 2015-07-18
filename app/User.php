@@ -44,4 +44,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function hasLovedRecipe(Recipe $recipe) {
         return $this->lovedRecipes()->where('id', $recipe->id)->count() > 0;
     }
+
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function isAdmin() {
+        return $this->admin == 1;
+    }
+
+    public function isApproved() {
+        return $this->approved == 1;
+    }
 }

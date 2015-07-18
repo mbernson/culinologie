@@ -38,6 +38,12 @@ Route::group(['middleware' => 'auth'], function () {
         ['create', 'edit', 'store', 'update', 'destroy']]);
 });
 
+Route::group(['middleware' => 'admin'], function () {
+    Route::resource('users', 'UsersController', ['only' =>
+        ['index', 'store', 'destroy']]);
+    Route::post('users/{users}/approve', 'UsersController@approve');
+});
+
 Route::resource('recipes', 'RecipesController', ['only' => ['index', 'show']]);
 
 Route::resource('cookbooks', 'CookbooksController', ['only' => ['index', 'show']]);

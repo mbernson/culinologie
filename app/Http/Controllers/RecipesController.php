@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Input;
@@ -272,7 +273,7 @@ class RecipesController extends Controller
 
         try {
             $recipe_saved = $recipe->save();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
             $recipe_saved = $recipe->save();
             Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
@@ -349,9 +350,23 @@ class RecipesController extends Controller
             ->with('recipe', $new_recipe);
     }
 
+    public function random()
+    {
+        $language = Input::get('lang', static::$default_language);
+
+        $recipe = Recipe::select('tracking_nr', 'language')
+            ->where('language', $language)
+            ->orderByRaw('RAND()')
+            ->first();
+
+        return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])
+            ->with('lang', $recipe->language);
+    }
+
     const DEFAULT_LIST = 'Loved';
 
-    public function bookmark($tracking_nr) {
+    public function bookmark($tracking_nr)
+    {
         $list = static::DEFAULT_LIST;
         $language = Input::get('language', static::$default_language);
 
@@ -371,7 +386,8 @@ class RecipesController extends Controller
             ->with('lang', $language);
     }
 
-    public function unbookmark($tracking_nr) {
+    public function unbookmark($tracking_nr)
+    {
         $list = static::DEFAULT_LIST;
         $language = Input::get('language', static::$default_language);
 

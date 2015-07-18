@@ -30,6 +30,7 @@ Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
+
     Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
     Route::post('recipes/{recipes}/bookmark', 'RecipesController@bookmark');
     Route::post('recipes/{recipes}/unbookmark', 'RecipesController@unbookmark');
@@ -44,6 +45,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('users/{users}/approve', 'UsersController@approve');
 });
 
+Route::get('recipes/random', 'RecipesController@random');
 Route::resource('recipes', 'RecipesController', ['only' => ['index', 'show']]);
 
 Route::resource('cookbooks', 'CookbooksController', ['only' => ['index', 'show']]);

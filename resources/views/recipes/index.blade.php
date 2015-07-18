@@ -55,9 +55,13 @@
         </div>
 		<div class="col-sm-8 col-md-9 col-lg-10">
             <h1>Recepten</h1>
+
+            <p>
             @if(Auth::check())
-            <p> <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a> </p>
+            <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a>
             @endif
+            <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
+            </p>
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>Volgnr.</th>

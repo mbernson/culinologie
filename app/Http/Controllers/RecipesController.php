@@ -125,7 +125,7 @@ class RecipesController extends Controller
         $available_languages = $search->buildQuery()
             ->select('language')->distinct()
             ->orderBy('language', 'desc')
-            ->get()->lists('language');
+            ->get()->lists('language')->all();
 
         return view('recipes.index')
             ->with('recipes', $recipes)

@@ -1,5 +1,7 @@
 <?php
 
+namespace Culinologie\Import;
+
 require 'script/parser.php';
 
 // Import

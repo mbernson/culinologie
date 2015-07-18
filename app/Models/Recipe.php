@@ -39,7 +39,8 @@ final class Recipe extends Model
             ->where('category', '!=', '')
             ->orderBy('category')
             ->orderBy('language')
-            ->lists('category');
+            ->lists('category')
+            ->all();
     }
 
     // Getters
@@ -55,7 +56,11 @@ final class Recipe extends Model
 
     public function textIngredients()
     {
-        return join("\n", $this->ingredients->lists('text'));
+        return join("\n", $this->ingredients->lists('text')->all());
+    }
+
+    private function parseIngredients() {
+
     }
 
     public function addIngredientsFromText($text)

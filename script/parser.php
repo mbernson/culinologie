@@ -1,5 +1,7 @@
 <?php
 
+namespace Culinologie\Import;
+
 // http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
 function startsWith($haystack, $needle)
 {

@@ -27,13 +27,33 @@
             </p>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-6">
             <h1>{{ $recipe->title }}</h1>
 
             @if($recipe->people != 0)
             <p>Voor {{ $recipe->people }} personen.</p>
             @endif
         </div>
+
+
+        @if(count($recipes) > 1)
+        <div class="col-md-3 hidden-print">
+            <form class="form-inline" style="display: block;" action="/recipes/{{ $recipe->tracking_nr }}">
+                <h4>Taal</h4>
+                <div class="form-group">
+                    <select name="lang" class="form-control">
+                        @foreach($recipes as $r)
+                            <option value="{{ $r->language }}" {{ $r->language == $recipe->language ? 'selected' : '' }}>
+                                {{ $languages[$r->language] or $r->language }}</option>
+                        @endforeach
+                    </select>
+
+                    <button type="submit" class="btn btn-primary">Ga</button>
+                </div>
+            </form>
+        </div>
+        @endif
+
     </div>
 
     <div class="row">
@@ -85,22 +105,7 @@
                     <td>{{ $recipe->updated_at->format('d M Y, H:i') }}</td>
                 </tr>
             </table>
-            
-            @if(count($recipes) > 1)
-            <form class="form-inline" action="/recipes/{{ $recipe->tracking_nr }}">
-                <h4>Taal</h4>
-                <div class="form-group">
-                    <select name="lang" class="form-control">
-                        @foreach($recipes as $r)
-                        <option value="{{ $r->language }}" {{ $r->language == $recipe->language ? 'selected' : '' }}>
-                            {{ $languages[$r->language] or $r->language }}</option>
-                        @endforeach
-                    </select>
 
-                    <button type="submit" class="btn btn-primary">Ga</button>
-                </div>
-            </form>
-            @endif
         </div>
 
         <div class="col-md-6">
@@ -116,6 +121,7 @@
         </div>
 
         <div class="col-md-3 sidebar">
+
             @if(file_exists(public_path().key($recipe->getImages())))
             <h4>Foto&#39;s</h4>
             @endif

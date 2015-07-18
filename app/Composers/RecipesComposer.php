@@ -63,7 +63,6 @@ final class RecipesComposer
             ->orderBy('category', 'asc')
             ->orderBy('language', 'asc')
             ->lists('category')
-            ->all()
         );
     }
 

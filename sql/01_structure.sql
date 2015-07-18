@@ -122,7 +122,12 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-
+create table recipe_bookmarks (
+  user_id INTEGER(11) UNSIGNED not null REFERENCES users(id),
+  list VARCHAR(255) not null default 'Saved',
+  recipe_id INTEGER(11) UNSIGNED NOT NULL REFERENCES  recipes(id),
+  PRIMARY KEY (user_id, list, recipe_id)
+);
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

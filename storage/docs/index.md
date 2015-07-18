@@ -1,19 +1,23 @@
-# Culinologie 0.1
+# Culinologie 1.1
 
-Een applicatie om recepten in bij te houden.
+Welkom in de handleiding!
+"Culinologie" is een applicatie om recepten in bij te houden. De applicatie is oorspronkelijk ontwikkeld op Hogeschool
+Leiden, in opdracht van een chef-kok. Sindsdien is de applicatie als hobbyproject doorontwikkeld.
+
+Deze applicatie is *vrije software*. De broncode is [beschikbaar op GitHub](https://github.com/mbernson/culinologie).
 
 ## Documentatie
 
-Lees informatie over:
+In deze handleiding vind je informatie over de volgende onderwerpen:
 
 ### Recepten bijhouden
 
-* [Recepten zoeken](/help/recepten/zoeken)
 * [Recepten toevoegen en wijzigen](/help/recepten/maken-en-wijzigen)
-* [Recepten delen](/help/recepten/delen)
+* [Zoekfunctie](/help/recepten/zoeken)
+* [Zichtbaarheid en delen](/help/recepten/delen)
+* [Kookboeken bijhouden](/help/kookboeken)
 * [Recepten printen](/help/recepten/printen)
 
 ### Administratieve taken
 
-* [Gebruikers toevoegen](/help/gebruikersbeheer)
-* [Backups downloaden](/help/backup)
+* [Gebruikers beheren](/help/gebruikersbeheer)

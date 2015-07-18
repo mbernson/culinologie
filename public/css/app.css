@@ -8041,9 +8041,19 @@ label,
   margin: 20px auto;
 }
 .well img,
+.docs-container img,
 .panel img {
   max-width: 100%;
 }
-.sidebar .panel {
+.docs-container img {
+  max-width: 80%;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+.sidebar .panel,
+.no-results {
   text-align: center;
 }
+
+/*# sourceMappingURL=app.css.map */

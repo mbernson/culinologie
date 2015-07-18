@@ -32,7 +32,7 @@ final class VisibilityScope implements ScopeInterface
     {
         $this->tableName = $model->getTable();
 
-        if (Auth::check()) {
+        if (Auth::check() && Auth::user()->isApproved()) {
             $this->applyLoggedInScope($builder, Auth::user());
         } else {
             $this->applyPublicScope($builder);

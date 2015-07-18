@@ -87,7 +87,7 @@ CREATE TABLE `recipes` (
 
 DELIMITER ;;
 /*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`culinologie`@`localhost` */ /*!50003 TRIGGER `cookbooks_recipes_sum_insert` AFTER INSERT ON `recipes` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `cookbooks_recipes_sum_insert` AFTER INSERT ON `recipes` FOR EACH ROW BEGIN
 
 UPDATE cookbooks c SET c.recipes_count = (
 SELECT count(r.id) FROM recipes r WHERE r.cookbook = NEW.cookbook
@@ -95,7 +95,7 @@ SELECT count(r.id) FROM recipes r WHERE r.cookbook = NEW.cookbook
 
 END */;;
 /*!50003 SET SESSION SQL_MODE="NO_ENGINE_SUBSTITUTION" */;;
-/*!50003 CREATE */ /*!50017 DEFINER=`culinologie`@`localhost` */ /*!50003 TRIGGER `cookbooks_recipes_sum_delete` AFTER DELETE ON `recipes` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `cookbooks_recipes_sum_delete` AFTER DELETE ON `recipes` FOR EACH ROW BEGIN
 
 UPDATE cookbooks c SET c.recipes_count = (
 SELECT count(r.id) FROM recipes r WHERE r.cookbook = OLD.cookbook

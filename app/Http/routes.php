@@ -23,12 +23,16 @@ Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function 
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
     Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
+    Route::post('recipes/{recipes}/bookmark', 'RecipesController@bookmark');
+    Route::post('recipes/{recipes}/unbookmark', 'RecipesController@unbookmark');
 });
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('recipes', 'RecipesController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
     Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
+    Route::post('recipes/{recipes}/bookmark', 'RecipesController@bookmark');
+    Route::post('recipes/{recipes}/unbookmark', 'RecipesController@unbookmark');
 
     Route::resource('cookbooks', 'CookbooksController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);

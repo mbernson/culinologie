@@ -26,8 +26,12 @@ final class VisibilityScope implements ScopeInterface
     // The item is only visible to its owner and other logged in users
     const VISIBILITY_LOGGED_IN = 2;
 
+    private $tableName;
+
     public function apply(Builder $builder, Model $model)
     {
+        $this->tableName = $model->getTable();
+
         if (Auth::check()) {
             $this->applyLoggedInScope($builder, Auth::user());
         } else {
@@ -44,7 +48,7 @@ final class VisibilityScope implements ScopeInterface
     {
         $isPrivate = function ($query) use ($user) {
             $query->where('visibility', '=', self::VISIBILITY_PRIVATE)
-                  ->where('user_id', '=', $user->id);
+                  ->where("{$this->tableName}.user_id", '=', $user->id);
         };
 
         $whereVisible = function ($query) use ($isPrivate) {

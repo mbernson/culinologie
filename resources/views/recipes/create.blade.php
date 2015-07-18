@@ -53,7 +53,7 @@
                 <p class="text-danger"><strong>Let op:</strong> foto upload is een b&egrave;ta feature, werking niet gegarandeerd.</p>
             </div>
 
-            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+            {!! csrf_field() !!}
         </div>
         <div class="col-md-3">
             <div class="form-group">

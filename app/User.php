@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Models\Recipe;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -31,4 +32,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    public function bookmarks() {
+        return $this->belongsToMany('App\Models\Recipe', 'recipe_bookmarks', 'user_id', 'recipe_id');
+    }
+
+    public function lovedRecipes() {
+        return $this->bookmarks()->wherePivot('list', 'Loved');
+    }
+
+    public function hasLovedRecipe(Recipe $recipe) {
+        return $this->lovedRecipes()->where('id', $recipe->id)->count() > 0;
+    }
 }

@@ -27,7 +27,7 @@ CREATE TABLE `cookbooks` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
   `slug` varchar(255) NOT NULL DEFAULT '',
-  `user_id` int(10) unsigned DEFAULT NULL,
+  `user_id` int(10) unsigned NOT NULL,
   `recipes_count` int(10) unsigned NOT NULL DEFAULT '0',
   `visibility` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),

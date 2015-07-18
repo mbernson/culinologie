@@ -8,7 +8,7 @@ final class Cookbook extends Model
 
     use HasVisibilities;
 
-    protected $fillable = ['title', 'slug'];
+    protected $fillable = ['title', 'slug', 'user_id'];
 
     public $timestamps = false;
 

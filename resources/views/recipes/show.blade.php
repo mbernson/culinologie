@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 hidden-print">
             @if(Session::has('return_url'))
             <p>
                 <a href="{{ Session::get('return_url') }}" class="btn btn-default">&larr; Terug</a>

@@ -62,6 +62,14 @@
             @endif
             <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
             </p>
+
+            @if(count($recipes) == 0)
+            <div class="well text-center no-results">
+                <h1>Geen resultaten</h1>
+                <p>Er zijn helaas geen recepten gevonden die voldoen aan de zoekcriteria.</p>
+                <p></p><a href="/recipes?lang[]=nl" class="btn btn-lg btn-danger">Reset filters</a></p>
+            </div>
+            @else
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>Volgnr.</th>
@@ -79,6 +87,7 @@
                 @endforeach
             </table>
             <p>{{ $count }} resultaten.</p>
+            @endif
         </div>
 	</div>
 	<div class="row">

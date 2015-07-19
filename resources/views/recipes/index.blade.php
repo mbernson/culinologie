@@ -57,10 +57,8 @@
             <h1>Recepten</h1>
 
             <p>
-            @if(Auth::check())
-            <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a>
-            @endif
-            <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
+	            <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a>
+	            <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
             </p>
 
             @if(count($recipes) == 0)
@@ -79,7 +77,7 @@
                 </tr>
                 @foreach($recipes as $recipe)
                 <tr>
-                    <td>{{ $recipe->tracking_nr }}</td>
+                    <td><a href="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">{{ $recipe->tracking_nr }}</a></td>
                     <td><a href="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">{{ $recipe->title }}</a></td>
                     <td>{{ $recipe->category }}</td>
                     <td><a href="/cookbooks/{{ $recipe->cookbook }}/recipes">{{ $recipe->cookbook }}</a></td>

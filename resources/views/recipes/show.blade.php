@@ -15,15 +15,18 @@
                 <a href="/recipes/{{ $recipe->tracking_nr }}/edit?lang={{ $recipe->language }}" class="btn btn-success"><i class="fa fa-edit"></i> Bewerken</a>
                 <a href="/recipes/{{ $recipe->tracking_nr }}/fork?lang={{ $recipe->language }}" class="btn btn-default"><i class="fa fa-copy"></i> Kopi&euml;ren</a>
 
+		@if(Auth::check())
                 <form method="post" action="/recipes/{{ $recipe->tracking_nr }}/{{ $user->hasLovedRecipe($recipe) ? 'unbookmark' : 'bookmark' }}">
                     <input type="hidden" name="language" value="{{ $recipe->language }}" />
                     {!! csrf_field() !!}
+
                     @if($user->hasLovedRecipe($recipe))
                     <button type="submit" class="btn btn-default active"><i class="fa fa-heart"></i> Bewaren</button>
                     @else
                     <button type="submit" class="btn btn-default"><i class="fa fa-heart-o"></i> Bewaren</button>
                     @endif
                 </form>
+		@endif
             </p>
         </div>
 

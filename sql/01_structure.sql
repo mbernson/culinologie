@@ -42,12 +42,14 @@ CREATE TABLE `cookbooks` (
 # ------------------------------------------------------------
 
 CREATE TABLE `ingredients` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `recipe_id` int(11) unsigned NOT NULL,
   `text` text NOT NULL,
   `amount` varchar(255) DEFAULT NULL,
   `unit` varchar(32) DEFAULT NULL,
   `header` varchar(255) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
   KEY `index_recipe_id` (`recipe_id`),
   CONSTRAINT `fk_recipe_id` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

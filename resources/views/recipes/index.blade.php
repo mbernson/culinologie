@@ -21,7 +21,9 @@
                     <label for="lang[]">Taal</label>
                     <select multiple class="form-control" name="lang[]">
                         @foreach($available_languages as $code)
-                        <option value="{{ $code }}" {{ in_array($code, $chosen_languages) ? 'selected' : '' }}>{{ $languages[$code] or $code }}</option>
+                            <option value="{{ $code }}" {{ in_array($code, $chosen_languages) ? 'selected' : '' }}>
+                                {{ $languages[$code] or $code }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -32,7 +34,9 @@
                     <select class="form-control" name="cookbook">
                         <option value="*">Alle kookboeken</option>
                         @foreach($cookbooks as $cb)
-                        <option value="{{ $cb->slug }}" {{ $params['cookbook'] == $cb->slug ? 'selected' : '' }}>{{ $cb->title }}</option>
+                            <option value="{{ ($cb->slug) }}" {{ $params['cookbook'] == ($cb->slug) ? 'selected' : '' }}>
+                                {{ $cb->title }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -43,13 +47,17 @@
                     <select class="form-control" name="category">
                         <option value="*">Alle categorieën</option>
                         @foreach($categories as $cat)
-                        <option value="{{ $cat }}" {{ $params['category'] == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                            <option value="{{ ($cat) }}" {{ $params['category'] == ($cat) ? 'selected' : '' }}>
+                                {{ $cat }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
 
                 <a href="/recipes?lang[]=nl" class="btn btn-sm btn-danger pull-left">Reset filters</a>
+
                 <button type="submit" class="btn btn-sm btn-primary pull-right">Toepassen</button>
+
                 <div class="clearfix visible-xs-block"></div>
             </form>
         </div>
@@ -88,10 +96,12 @@
             @endif
         </div>
 	</div>
+
 	<div class="row">
 		<div class="col-md-10 col-md-offset-2 center">
             {!! $recipes->render() !!}
         </div>
 	</div>
 </div>
+
 @endsection

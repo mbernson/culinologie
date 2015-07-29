@@ -121,14 +121,13 @@ class RecipesController extends Controller
             abort(404);
         }
 
-        $groups = Collection::make($recipe->ingredients)->groupBy('header');
+        $ingredients = $recipe->ingredients->groupBy('header');
 
         return view('recipes.show')
             ->with('recipe', $recipe)
             ->with('recipes', $recipes)
             ->with('cookbook', $recipe->cookbook_rel)
-            ->with('ingredients', $recipe->ingredients)
-            ->with('ingredient_groups', $groups);
+            ->with('ingredients', $ingredients);
     }
 
     /**

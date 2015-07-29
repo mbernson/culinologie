@@ -8,9 +8,9 @@
             <ol class="breadcrumb">
                 <li><a href="/help">Help</a></li>
                 @if(isset($trail))
-                @foreach($trail as $crumb)
-                <li>{{ ucfirst(str_replace('-', ' ', $crumb)) }}</li>
-                @endforeach
+                    @foreach($trail as $crumb)
+                        <li>{{ ucfirst(str_replace('-', ' ', $crumb)) }}</li>
+                    @endforeach
                 @endif
             </ol>
         </div>

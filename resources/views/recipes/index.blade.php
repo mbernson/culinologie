@@ -66,7 +66,16 @@
 
             <p>
 	            <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a>
+	            
 	            <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
+
+	            @if(Auth::check())
+		            @if(Request::has('liked'))
+		            <a class="btn btn-default active pull-right" href="/recipes" role="button" style="margin: 0 1em;"><i class="fa fa-heart"></i> Bewaarde recepten</a>
+		            @else
+		            <a class="btn btn-default pull-right" href="/recipes?liked=1" role="button" style="margin: 0 1em;"><i class="fa fa-heart-o"></i> Bewaarde recepten</a>
+		            @endif
+	            @endif
             </p>
 
             @if(count($recipes) == 0)
@@ -76,7 +85,8 @@
                 <p></p><a href="/recipes?lang[]=nl" class="btn btn-lg btn-danger">Reset filters</a></p>
             </div>
             @else
-            <table class="table table-striped table-bordered">
+            <div class="table-responsive">
+            <table class="table table-striped">
                 <tr>
                     <th>Volgnr.</th>
                     <th>Titel</th>
@@ -92,13 +102,14 @@
                 </tr>
                 @endforeach
             </table>
+            </div>
             <p>{{ $count }} resultaten.</p>
             @endif
         </div>
 	</div>
 
 	<div class="row">
-		<div class="col-md-10 col-md-offset-2 center">
+		<div class="col-md-10 col-md-offset-2">
             {!! $recipes->render() !!}
         </div>
 	</div>

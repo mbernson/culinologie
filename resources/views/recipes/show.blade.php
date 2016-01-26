@@ -111,7 +111,7 @@
 
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 recipe-body">
             <h2>Bereiding</h2>
 
             {!! $recipe->getHtmlDescription() !!}

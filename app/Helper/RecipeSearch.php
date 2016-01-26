@@ -2,6 +2,8 @@
 	
 use App\Models\Recipe;
 use Input;
+use Auth;
+use DB;
 
 final class RecipeSearch
 {
@@ -23,6 +25,14 @@ final class RecipeSearch
     {
         if ($query == null) {
             $query = Recipe::query();
+        }
+        
+        if (Input::has('liked') && Auth::check()) {
+	        $query->whereIn('id', function ($q) {
+		        $q->select('recipe_id')
+			        ->from('recipe_bookmarks')
+			        ->where('user_id', Auth::user()->getKey());
+	        });
         }
 
         if (Input::has('query')) {

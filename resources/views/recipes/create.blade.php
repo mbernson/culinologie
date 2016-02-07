@@ -49,9 +49,8 @@
             </div>
 
             <div class="form-group">
-                <label for="pictures">Foto</label>
+                <label for="picture">Foto</label>
                 <input type="file" name="picture" />
-                <p class="text-danger"><strong>Let op:</strong> foto upload is een b&egrave;ta feature, werking niet gegarandeerd.</p>
             </div>
 
             {!! csrf_field() !!}

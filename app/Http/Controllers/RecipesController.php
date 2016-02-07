@@ -11,7 +11,6 @@ use Session;
 use Auth;
 use DB;
 use Image;
-use Request as RequestFacade;
 use App\Models\Recipe, App\Models\Ingredient;
 use App\Helper\RecipeSearch;
 

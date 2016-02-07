@@ -6,9 +6,10 @@
 <form class="container" method="POST" action="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}" enctype="multipart/form-data">
     <input type="hidden" name="_method" value="PUT">
 @else
-<form class="container" method="POST" action="/recipes">
-    <input type="hidden" name="_method" value="POST" enctype="multipart/form-data">
+<form class="container" method="POST" action="/recipes" enctype="multipart/form-data">
+    <input type="hidden" name="_method" value="POST">
 @endif
+
 
 	<div class="row">
         <div class="col-md-12">

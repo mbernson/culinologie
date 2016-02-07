@@ -207,14 +207,15 @@ class RecipesController extends Controller
             Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
         }
 
-        if (RequestFacade::hasFile('picture')) {
+        if (Input::hasFile('picture')) {
+
             $path = join(DIRECTORY_SEPARATOR, [
                 public_path(),
                 'uploads',
                 'pictures'
             ]);
             $filename = $recipe->tracking_nr.'.jpg';
-            $file = RequestFacade::file('picture')->move($path, $filename);
+            $file = Input::file('picture')->move($path, $filename);
             $image = Image::make($file)->widen(480);
             $image->save($path.DIRECTORY_SEPARATOR.$filename);
         }

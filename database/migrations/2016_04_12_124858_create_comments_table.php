@@ -18,7 +18,7 @@ class CreateCommentsTable extends Migration {
 			$table->string('title')->nullable();
 			$table->text('body', 65535)->nullable();
 			$table->integer('rating')->unsigned()->nullable();
-			$table->integer('user_id')->unsigned()->index('user_id');
+			$table->integer('user_id')->unsigned();
 			$table->integer('recipe_tracking_nr')->unsigned();
 			$table->timestamps();
 			$table->index(['recipe_tracking_nr','rating'], 'recipe_tracking_nr');

@@ -14,7 +14,8 @@ class AddForeignKeysToCommentsTable extends Migration {
 	{
 		Schema::table('comments', function(Blueprint $table)
 		{
-			$table->foreign('user_id', 'comments_ibfk_1')->references('id')->on('users')->onUpdate('NO ACTION')->onDelete('CASCADE');
+			$table->foreign('recipe_tracking_nr', 'comments_ibfk_2')->references('tracking_nr')->on('recipes')->onUpdate('CASCADE')->onDelete('CASCADE');
+			$table->foreign('user_id', 'comments_ibfk_3')->references('id')->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
 		});
 	}
 
@@ -28,7 +29,8 @@ class AddForeignKeysToCommentsTable extends Migration {
 	{
 		Schema::table('comments', function(Blueprint $table)
 		{
-			$table->dropForeign('comments_ibfk_1');
+			$table->dropForeign('comments_ibfk_2');
+			$table->dropForeign('comments_ibfk_3');
 		});
 	}
 

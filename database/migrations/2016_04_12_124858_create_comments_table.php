@@ -15,11 +15,13 @@ class CreateCommentsTable extends Migration {
 		Schema::create('comments', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('title')->default('');
-			$table->text('body', 65535);
+			$table->string('title')->nullable();
+			$table->text('body', 65535)->nullable();
 			$table->integer('rating')->unsigned()->nullable();
 			$table->integer('user_id')->unsigned()->index('user_id');
+			$table->integer('recipe_tracking_nr')->unsigned();
 			$table->timestamps();
+			$table->index(['recipe_tracking_nr','rating'], 'recipe_tracking_nr');
 		});
 	}
 

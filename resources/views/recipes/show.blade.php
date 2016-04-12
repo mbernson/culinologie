@@ -246,7 +246,7 @@
 
                         </h4>
                         <p class="list-group-item-text">
-                            {!!nl2br($comment->body)!!}
+                            {!!nl2br(htmlspecialchars($comment->body))!!}
                         </p>
 
                     </div>

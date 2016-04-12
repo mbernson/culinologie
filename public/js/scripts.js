@@ -11,3 +11,16 @@ $('#rating-switch').click(function(){
         $(this).html('Off');
     }
 });
+
+$('.deleteComment').click(function(){
+    var url = $(this).data('url');
+    var token = $('input[name=_token]').val();
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: {_token: token},
+        success: function(result) {
+            location.reload();
+        }
+    });
+});

@@ -339,7 +339,7 @@ class RecipesController extends Controller
 
     public function postComment($trackingnr)
     {
-        $data = Input::all();
+        $data = Input::only('title','rating','body');
         $comment = new Comment($data);
         $comment->user_id = Auth::user()->id;
         $comment->recipe_tracking_nr = $trackingnr;
@@ -352,10 +352,12 @@ class RecipesController extends Controller
         $comment = Comment::findOrFail($comment_id);
         if ($comment->user_id == Auth::user()->id) {
             $comment->delete();
-            return Redirect::back()->with('status', 'Review is verwijderd!');
+            Session::flash('status', 'Reactie verwijderd!');
+            return 1;
         }
         else {
-            return Redirect::back()->with('status', 'Review kan niet verwijderd worden!');
+            Session::flash('warning', 'Kon reactie niet verwijderen');
+            return 0;
         }
     }
 }

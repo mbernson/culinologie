@@ -238,7 +238,7 @@
                             {{$comment->title}}
                             @if (Auth::user())
                                 @if ($comment->user_id == Auth::user()->id)
-                                    <a class="btn btn-xs text-danger pull-right" href="{{route('recipes.deleteComment',[$recipe->id, $comment->id])}}"><i class="fa fa-trash-o fa-fw"></i></a>
+                                    <a data-url="{{route('recipes.deleteComment',[$recipe->id, $comment->id])}}" class="btn btn-xs text-danger pull-right deleteComment"><i class="fa fa-trash-o fa-fw"></i></a>
                                 @endif
                             @endif
                             <br>

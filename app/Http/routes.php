@@ -38,7 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('cookbooks', 'CookbooksController', ['only' =>
         ['create', 'edit', 'store', 'update', 'destroy']]);
     Route::post('recipes/{recipe}/postComment', ['as'=>'recipes.postComment', 'uses'=>'RecipesController@postComment']);
-    Route::get('recipes/{recipe}/deleteComment/{comment_id}', ['as'=>'recipes.deleteComment', 'uses'=>'RecipesController@deleteComment']);
+    Route::delete('recipes/{recipe}/deleteComment/{comment_id}', ['as'=>'recipes.deleteComment', 'uses'=>'RecipesController@deleteComment']);
 });
 
 Route::group(['middleware' => 'admin'], function () {

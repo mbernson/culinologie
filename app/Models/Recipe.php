@@ -77,6 +77,12 @@ final class Recipe extends Model
             ->all();
     }
 
+    // Setters
+
+    public function setDescriptionAttribute($newValue) {
+        $this->attributes['description'] = htmlentities($newValue);
+    }
+
     // Getters
 
     public function getDescriptionAttribute()

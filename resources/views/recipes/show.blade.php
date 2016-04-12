@@ -214,9 +214,12 @@
             <div class="row">
         		                
                 <div class="list-group">
+                @if($recipe->comments->count() ==0)
+                <p class="text-center well">Geen reacties gevonden...</p>
+                @else
                   @foreach($recipe->comments()->orderBy('id','DESC')->get() as $comment)
                   <div class="list-group-item">
-                        
+
                        <div class="pull-right">
                             <small><i class="fa fa-user fa-fw"></i> {{$comment->author->name}}</small>
                             <br>
@@ -242,12 +245,13 @@
                             <p style="font-size: 75% !important;"><small class="text-muted">{{$comment->created_at}}</small></p>
 
                         </h4>
-                        <p class="list-group-item-text"> 
+                        <p class="list-group-item-text">
                             {!!nl2br($comment->body)!!}
                         </p>
-                        
+
                     </div>
                    @endforeach
+                @endif
                 </div>
             </div>
         </div>

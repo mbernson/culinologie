@@ -125,7 +125,7 @@
            
         </div>
 
-        <div class="col-md-2 sidebar">
+        <div class="col-md-3 sidebar">
             @if(file_exists(public_path().key($recipe->getImages())))
                 <h4>Foto&#39;s</h4>
             @endif
@@ -239,7 +239,7 @@
                                 @endif
                             @endif
                             <br>
-                            <small class="text-muted">{{$comment->created_at}}</small>
+                            <p style="font-size: 75% !important;"><small class="text-muted">{{$comment->created_at}}</small></p>
 
                         </h4>
                         <p class="list-group-item-text"> 

@@ -23,12 +23,46 @@ final class Recipe extends Model
     {
         return $this->belongsTo('App\Models\Cookbook', 'cookbook', 'slug');
     }
+    
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment', 'recipe_tracking_nr', 'tracking_nr');
+    }
 
     // Global scopes
 
     use HasVisibilities;
 
     // Helpers
+    
+    public function getRating($output = "average")
+    {
+        $ratings = $this->comments();
+        $count = $ratings->whereNotNull('rating')->count();
+        $average = number_format($ratings->avg('rating'),1);
+        switch($output){
+            case 'average':
+                return $average;
+                break;
+            case 'count':
+                return $count;
+                break;
+            case 'array':
+                return ['review_count'=>$count, 'average'=>$average];
+                break;
+            case 'html_stars':
+                $output ='';
+                for($i=1;$i<=5;$i++) {
+                  if($i <= $average) {
+                	$output .= '<i class="fa fa-star"></i>';
+                  } else {
+                	$output .= '<i class="fa fa-star-o"></i>';
+                  }
+                }
+                return $output;
+                break;
+        }
+    }
     
     public static function categories(array $languages)
     {

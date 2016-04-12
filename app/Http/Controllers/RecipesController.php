@@ -6,6 +6,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Redirect;
 use Input;
 use Session;
 use Auth;
@@ -14,6 +15,7 @@ use Image;
 use Request as RequestFacade;
 use App\Models\Recipe, App\Models\Ingredient;
 use App\Helper\RecipeSearch;
+use App\Models\Comment;
 
 
 class RecipesController extends Controller
@@ -122,7 +124,7 @@ class RecipesController extends Controller
         }
 
         $ingredients = $recipe->ingredients->groupBy('header');
-
+        
         return view('recipes.show')
             ->with('recipe', $recipe)
             ->with('recipes', $recipes)
@@ -333,5 +335,27 @@ class RecipesController extends Controller
 
         return redirect()->route('recipes.show', ['recipes' => $tracking_nr])
             ->with('lang', $language);
+    }
+
+    public function postComment($trackingnr)
+    {
+        $data = Input::all();
+        $comment = new Comment($data);
+        $comment->user_id = Auth::user()->id;
+        $comment->recipe_tracking_nr = $trackingnr;
+        $comment->save();
+        return Redirect::to('recipes/'.$trackingnr);
+    }
+
+    public function deleteComment($recipe_id, $comment_id)
+    {
+        $comment = Comment::findOrFail($comment_id);
+        if ($comment->user_id == Auth::user()->id) {
+            $comment->delete();
+            return Redirect::back()->with('status', 'Review is verwijderd!');
+        }
+        else {
+            return Redirect::back()->with('status', 'Review kan niet verwijderd worden!');
+        }
     }
 }

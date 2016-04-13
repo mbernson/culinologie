@@ -143,8 +143,9 @@
             
         <div class="col-md-9" id="comments">
             <h3 class="text-left">Reacties
+                @if(Auth::user())
                 <button onClick="$('#reviewForm').toggleClass('hidden');" class="btn btn-primary pull-right btn-sm">Reactie formulier</button>
-
+                @endif
             </h3>
             @if(Auth::user())
             <form class="form-horizontal hidden" id="reviewForm" method="post" action="{{route('recipes.postComment', $recipe->tracking_nr)}}">

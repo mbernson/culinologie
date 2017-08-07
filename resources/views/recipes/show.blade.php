@@ -31,7 +31,8 @@
         </div>
 
         <div class="col-md-6">
-            <h1>{{ $recipe->title }}</h1>
+            
+            <h1>{{ $recipe->title }} <small class="pull-right">{!!$recipe->getRating('html_stars')!!} <small><a href="#comments">({{$recipe->getRating('count')}})</a></small></small></h1>
 
             @if($recipe->people != 0)
             <p>Voor {{ $recipe->people }} personen.</p>
@@ -121,25 +122,142 @@
 
             {!! $recipe->getHtmlPresentation() !!}
             @endif
+           
         </div>
 
         <div class="col-md-3 sidebar">
-
             @if(file_exists(public_path().key($recipe->getImages())))
-            <h4>Foto&#39;s</h4>
+                <h4>Foto&#39;s</h4>
             @endif
             @foreach($recipe->getImages() as $url => $title)
                 @if(file_exists(public_path().$url))
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <img src="{{ $url }}" alt="{{ $title }}" />
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="{{ $url }}" alt="{{ $title }}" />
+                        </div>
+                        <div class="panel-footer">{{ $title }}</div>
                     </div>
-                    <div class="panel-footer">{{ $title }}</div>
-                </div>
                 @endif
             @endforeach
         </div>
+            
+        <div class="col-md-9" id="comments">
+            <h3 class="text-left">Reacties
+                @if(Auth::user())
+                <button onClick="$('#reviewForm').toggleClass('hidden');" class="btn btn-primary pull-right btn-sm">Reactie formulier</button>
+                @endif
+            </h3>
+            @if(Auth::user())
+            <form class="form-horizontal hidden" id="reviewForm" method="post" action="{{route('recipes.postComment', $recipe->tracking_nr)}}">
+                <fieldset>
+                {!! csrf_field() !!}
+                <!-- Form Name -->
+                <legend>Laat een reactie achter!</legend>
+                
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="title">Titel*</label>  
+                  <div class="col-md-8">
+                  <input id="title" name="title" type="text" placeholder="Titel van je review" class="form-control input-md" required="">
+                    
+                  </div>
+                </div>
+                
+                <!-- Multiple Radios (inline) -->
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="rating">Rating
+                      <small style="margin-left: 10px;"><a class="btn btn-xs btn-primary" id="rating-switch">On</a></small>
+                  </label>
+                  <div class="col-md-5">
+                    <label class="radio-inline" for="rating-0">
+                      <input type="radio" name="rating" id="rating-0" value="1">
+                      1
+                    </label> 
+                    <label class="radio-inline" for="rating-1">
+                      <input type="radio" name="rating" id="rating-1" value="2">
+                      2
+                    </label> 
+                    <label class="radio-inline" for="rating-2">
+                      <input type="radio" name="rating" id="rating-2" value="3">
+                      3
+                    </label> 
+                    <label class="radio-inline" for="rating-3">
+                      <input type="radio" name="rating" id="rating-3" value="4">
+                      4
+                    </label> 
+                    <label class="radio-inline" for="rating-4">
+                      <input type="radio" name="rating" id="rating-4" value="5">
+                      5
+                    </label>
+                  </div>
+
+                </div>
+                
+                <!-- Textarea -->
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="body">Bericht</label>
+                  <div class="col-md-8">                     
+                    <textarea class="form-control" id="body" name="body"></textarea>
+                  </div>
+                </div>
+                
+                <!-- Submit button -->
+                <div class="form-group">
+                  <label class="col-md-2 control-label" for="body"></label>
+                  <div class="col-md-8">                     
+                    <button type="submit" class="btn btn-success">Verstuur je reactie &raquo;</button>
+                  </div>
+                </div>
+                </fieldset>
+            </form>
+
+            @endif
+            <div class="row">
+        		                
+                <div class="list-group">
+                @if($recipe->comments->count() ==0)
+                <p class="text-center well">Geen reacties gevonden...</p>
+                @else
+                  @foreach($recipe->comments()->orderBy('id','DESC')->get() as $comment)
+                  <div class="list-group-item">
+
+                       <div class="pull-right">
+                            <small><i class="fa fa-user fa-fw"></i> {{$comment->author->name}}</small>
+                            <br>
+
+                           <div class="stars text-left">
+                               @if ($comment->rating != NULL)
+                                {!!$comment->getHtmlStars()!!}
+                               @else
+                                   Geen rating
+                               @endif
+                            </div>
+
+                        </div>
+
+                        <h4 class="list-group-item-heading">
+                            {{$comment->title}}
+                            @if (Auth::user())
+                                @if ($comment->user_id == Auth::user()->id)
+                                    <a data-url="{{route('recipes.deleteComment',[$recipe->id, $comment->id])}}" class="btn btn-xs text-danger pull-right deleteComment"><i class="fa fa-trash-o fa-fw"></i></a>
+                                @endif
+                            @endif
+                            <br>
+                            <p style="font-size: 75% !important;"><small class="text-muted">{{$comment->created_at}}</small></p>
+
+                        </h4>
+                        <p class="list-group-item-text">
+                            {!!nl2br(htmlspecialchars($comment->body))!!}
+                        </p>
+
+                    </div>
+                   @endforeach
+                @endif
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
-
 @endsection

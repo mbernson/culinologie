@@ -73,7 +73,7 @@ final class Recipe extends Model
             ->where('category', '!=', '')
             ->orderBy('category')
             ->orderBy('language')
-            ->lists('category')
+            ->pluck('category')
             ->all();
     }
 
@@ -90,7 +90,7 @@ final class Recipe extends Model
 
     public function textIngredients()
     {
-        return join("\n", $this->ingredients->lists('text')->all());
+        return join("\n", $this->ingredients->pluck('text')->all());
     }
 
     public static function parseIngredientsFromText($text) {

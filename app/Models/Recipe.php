@@ -72,7 +72,6 @@ final class Recipe extends Model
             ->whereRaw('category is not null')
             ->where('category', '!=', '')
             ->orderBy('category')
-            ->orderBy('language')
             ->pluck('category')
             ->all();
     }

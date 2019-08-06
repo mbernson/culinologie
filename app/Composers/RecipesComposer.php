@@ -61,7 +61,6 @@ final class RecipesComposer
             ->select('category')
             ->groupBy('category')
             ->orderBy('category', 'asc')
-            ->orderBy('language', 'asc')
             ->pluck('category')
         );
     }

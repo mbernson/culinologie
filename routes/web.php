@@ -60,3 +60,4 @@ Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+Route::get('/logout', 'Auth\LoginController@logout');

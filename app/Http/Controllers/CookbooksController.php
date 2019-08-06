@@ -5,9 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Cookbook;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Auth;
-use Input;
-use Session;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class CookbooksController extends Controller
 {
@@ -47,7 +46,7 @@ class CookbooksController extends Controller
      */
     public function store(Request $request)
     {
-        $title = Input::get('title');
+        $title = $request->get('title');
 
         $cookbook = new Cookbook([
             'title' => $title,

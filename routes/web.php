@@ -56,8 +56,8 @@ Route::resource('cookbooks', 'CookbooksController', ['only' => ['index', 'show']
 Route::get('/help', 'DocsController@index');
 Route::get('/help/{path?}', 'DocsController@show')->where('path', '.+');
 
-Route::controllers([
-    'auth' => 'Auth\AuthController',
-    'password' => 'Auth\PasswordController',
-]);
+// Route::controllers([
+//     'auth' => 'Auth\AuthController',
+//     'password' => 'Auth\PasswordController',
+// ]);
 Route::get('/logout', 'Auth\LoginController@logout');

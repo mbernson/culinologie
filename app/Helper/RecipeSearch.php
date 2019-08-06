@@ -1,9 +1,9 @@
 <?php namespace App\Helper;
 	
 use App\Models\Recipe;
-use Input;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 final class RecipeSearch
 {
@@ -21,13 +21,13 @@ final class RecipeSearch
         $this->params = array_merge($this->params, $params);
     }
 
-    public function buildQuery($query = null)
+    public function buildQuery(Request $request, $query = null)
     {
         if ($query == null) {
             $query = Recipe::query();
         }
         
-        if (Input::has('liked') && Auth::check()) {
+        if ($request->has('liked') && Auth::check()) {
 	        $query->whereIn('id', function ($q) {
 		        $q->select('recipe_id')
 			        ->from('recipe_bookmarks')
@@ -35,8 +35,8 @@ final class RecipeSearch
 	        });
         }
 
-        if (Input::has('query')) {
-            $term = Input::get('query');
+        if ($request->has('query')) {
+            $term = $request->get('query');
             $query->where(function ($q) use ($term) {
                 $q->where('recipes.description', 'like', "%$term%")
                   ->orWhere('recipes.presentation', 'like', "%$term%");
@@ -44,14 +44,14 @@ final class RecipeSearch
             $this->params['query'] = $term;
         }
 
-        if (Input::has('title')) {
-            $title = Input::get('title');
+        if ($request->has('title')) {
+            $title = $request->get('title');
             $query->where('recipes.title', 'like', "%$title%");
             $this->params['title'] = $title;
         }
 
-        if (Input::has('category')) {
-            $category = Input::get('category');
+        if ($request->has('category')) {
+            $category = $request->get('category');
             if ($category != '*') {
                 $query->where('category', '=', $category);
                 $this->params['category'] = $category;
@@ -61,8 +61,8 @@ final class RecipeSearch
         if ($this->cookbook != '*') {
             $query->where('cookbook', '=', $this->cookbook);
             $this->params['cookbook'] = $this->cookbook;
-        } elseif (Input::has('cookbook') && Input::get('cookbook') != '*') {
-            $cookbook = Input::get('cookbook');
+        } elseif ($request->has('cookbook') && $request->get('cookbook') != '*') {
+            $cookbook = $request->get('cookbook');
             $query->where('cookbook', '=', $cookbook);
             $this->params['cookbook'] = $cookbook;
         }

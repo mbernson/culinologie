@@ -1,10 +1,10 @@
 <?php namespace App\Scopes;
 
-use Illuminate\Database\Eloquent\ScopeInterface;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Visibility scope
@@ -16,7 +16,7 @@ use Auth;
  * - The model has a `visibility` column of an integer type.
  * - The model has a `user_id` column that refers to a user model.
  */
-final class VisibilityScope implements ScopeInterface
+final class VisibilityScope implements Scope
 {
 
     // The item is visible to anyone

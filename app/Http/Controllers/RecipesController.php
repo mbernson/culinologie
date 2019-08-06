@@ -7,10 +7,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
-use Input;
-use Session;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Image;
 use App\Models\Recipe, App\Models\Ingredient;
 use App\Helper\RecipeSearch;
@@ -35,13 +34,13 @@ class RecipesController extends Controller
      *
      * @return Response
      */
-    public function index($cookbook = '*')
+    public function index(Request $request, $cookbook = '*')
     {
-        $languages = Input::get('lang', ['nl', 'uk']);
+        $languages = $request->get('lang', ['nl', 'uk']);
         $search = new RecipeSearch();
         $search->setCookbook($cookbook);
 
-        $recipes = $search->buildQuery()
+        $recipes = $search->buildQuery($request)
             ->select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('created_at', 'desc');
@@ -54,7 +53,7 @@ class RecipesController extends Controller
 
         Session::flash('return_url', route('recipes.index', $search->getParams()));
 
-        $available_languages = $search->buildQuery()
+        $available_languages = $search->buildQuery($request)
             ->select('language')->distinct()
             ->orderBy('language', 'desc')
             ->get()->lists('language')->all();
@@ -102,12 +101,12 @@ class RecipesController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $recipes = Recipe::where('tracking_nr', '=', $id)
             ->orderBy('language', 'asc')->get();
 
-        $language = Input::get('lang', null);
+        $language = $request->get('lang', null);
         $recipe = false;
         foreach ($recipes as $r) {
             if ($r->language == $language) {
@@ -137,9 +136,9 @@ class RecipesController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $lang = Input::get('lang', static::$default_language);
+        $lang = $request->get('lang', static::$default_language);
         $recipe = Recipe::where('tracking_nr', '=', $id)
             ->where('language', '=', $lang)
             ->first();
@@ -158,9 +157,9 @@ class RecipesController extends Controller
      * @param  int  $tracking_nr
      * @return Response
      */
-    public function update($tracking_nr)
+    public function update(Request $request, $tracking_nr)
     {
-        $lang = Input::get('lang');
+        $lang = $request->get('lang');
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $lang)
             ->first();
@@ -172,12 +171,12 @@ class RecipesController extends Controller
         $this->db->table('ingredients')
             ->where('recipe_id', '=', $recipe->id)->delete();
 
-        return $this->saveRecipe($recipe);
+        return $this->saveRecipe($request, $recipe);
     }
 
-    private function saveRecipe(Recipe $recipe)
+    private function saveRecipe(Request $request, Recipe $recipe)
     {
-        $input = Input::only('title', 'people', 'presentation', 'year', 'season',
+        $input = $request->only('title', 'people', 'presentation', 'year', 'season',
             'cookbook', 'category', 'temperature', 'visibility', 'tracking_nr'
         );
 
@@ -187,17 +186,17 @@ class RecipesController extends Controller
             $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
         }
 
-        if (Input::has('lang')) {
-            $recipe->language = Input::get('lang');
+        if ($request->has('lang')) {
+            $recipe->language = $request->get('lang');
         }
 
-        if (Input::has('directions')) {
-            $recipe->description = Input::get('directions');
+        if ($request->has('directions')) {
+            $recipe->description = $request->get('directions');
         }
 
         // Override the category if the user provided one.
-        if (!empty(Input::get('category_alt'))) {
-            $recipe->category = Input::get('category_alt');
+        if (!empty($request->get('category_alt'))) {
+            $recipe->category = $request->get('category_alt');
         }
 
         try {
@@ -208,7 +207,7 @@ class RecipesController extends Controller
             Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
         }
 
-        if (Input::hasFile('picture')) {
+        if ($request->hasFile('picture')) {
 
             $path = join(DIRECTORY_SEPARATOR, [
                 public_path(),
@@ -216,12 +215,12 @@ class RecipesController extends Controller
                 'pictures'
             ]);
             $filename = $recipe->tracking_nr.'.jpg';
-            $file = Input::file('picture')->move($path, $filename);
+            $file = $request->file('picture')->move($path, $filename);
             $image = Image::make($file)->widen(480);
             $image->save($path.DIRECTORY_SEPARATOR.$filename);
         }
 
-        $ingredients_saved = $recipe->saveIngredientsFromText(Input::get('ingredients'));
+        $ingredients_saved = $recipe->saveIngredientsFromText($request->get('ingredients'));
 
         if ($recipe_saved && $ingredients_saved) {
             return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
@@ -236,14 +235,14 @@ class RecipesController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id, Request $request)
+    public function destroy(Request $request, $id)
     {
-        if (!Input::has('lang')) {
+        if (!$request->has('lang')) {
             return abort(500);
         }
 
         $recipe = Recipe::where('tracking_nr', '=', $id)
-            ->where('language', '=', Input::get('lang'))
+            ->where('language', '=', $request->get('lang'))
             ->first();
 
         if (!Auth::check()) {
@@ -261,9 +260,9 @@ class RecipesController extends Controller
         }
     }
 
-    public function fork($tracking_nr)
+    public function fork(Request $request, $tracking_nr)
     {
-        $lang = Input::get('lang', static::$default_language);
+        $lang = $request->get('lang', static::$default_language);
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $lang)
             ->first();
@@ -280,9 +279,9 @@ class RecipesController extends Controller
             ->with('recipe', $new_recipe);
     }
 
-    public function random()
+    public function random(Request $request)
     {
-        $language = Input::get('lang', static::$default_language);
+        $language = $request->get('lang', static::$default_language);
 
         $recipe = Recipe::select('tracking_nr', 'language')
             ->where('language', $language)
@@ -295,10 +294,10 @@ class RecipesController extends Controller
 
     const DEFAULT_LIST = 'Loved';
 
-    public function bookmark($tracking_nr)
+    public function bookmark(Request $request, $tracking_nr)
     {
         $list = static::DEFAULT_LIST;
-        $language = Input::get('language', static::$default_language);
+        $language = $request->get('language', static::$default_language);
 
         $recipe = Recipe::select('id')->where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $language)
@@ -316,10 +315,10 @@ class RecipesController extends Controller
             ->with('lang', $language);
     }
 
-    public function unbookmark($tracking_nr)
+    public function unbookmark(Request $request, $tracking_nr)
     {
         $list = static::DEFAULT_LIST;
-        $language = Input::get('language', static::$default_language);
+        $language = $request->get('language', static::$default_language);
 
         $recipe = Recipe::select('id')->where('tracking_nr', '=', $tracking_nr)
             ->where('language', '=', $language)
@@ -337,9 +336,9 @@ class RecipesController extends Controller
             ->with('lang', $language);
     }
 
-    public function postComment($trackingnr)
+    public function postComment(Request $request, $trackingnr)
     {
-        $data = Input::only('title','rating','body');
+        $data = $request->only('title','rating','body');
         $comment = new Comment($data);
         $comment->user_id = Auth::user()->id;
         $comment->recipe_tracking_nr = $trackingnr;
@@ -347,7 +346,7 @@ class RecipesController extends Controller
         return Redirect::to('recipes/'.$trackingnr);
     }
 
-    public function deleteComment($recipe_id, $comment_id)
+    public function deleteComment(Request $request, $recipe_id, $comment_id)
     {
         $comment = Comment::findOrFail($comment_id);
         if ($comment->user_id == Auth::user()->id) {

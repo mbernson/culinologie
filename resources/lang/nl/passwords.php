@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Password Reminder Language Lines
@@ -13,14 +12,9 @@ return [
     |
     */
 
-    "password" => "Wachtwoord moet minimaal zes tekens lang zijn en de wachtwoorden moeten overeenkomen.",
-
-    "user"     => "Geen gebruiker bekend met dat e-mailadres.",
-
-    "token"    => "Dit wachtwoord reset token is niet geldig.",
-
-    "sent"     => "Wachtwoord herinnering verzonden!",
-
-    "reset"    => "Wachtwoord is veranderd!",
-
+    'password' => 'Wachtwoord moet minimaal acht tekens lang zijn en de wachtwoorden moeten overeenkomen.',
+    'reset'    => 'Het wachtwoord van uw account is gewijzigd.',
+    'sent'     => 'We hebben een e-mail verstuurd met instructies om een nieuw wachtwoord in te stellen.',
+    'token'    => 'Dit wachtwoordhersteltoken is niet geldig.',
+    'user'     => 'Geen gebruiker bekend met het e-mailadres.',
 ];

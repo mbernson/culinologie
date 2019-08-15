@@ -16,11 +16,11 @@
                 <a href="/recipes/{{ $recipe->tracking_nr }}/fork?lang={{ $recipe->language }}" class="btn btn-default"><i class="fa fa-copy"></i> Kopi&euml;ren</a>
 
                 @if(Auth::check())
-                    <form method="post" action="/recipes/{{ $recipe->tracking_nr }}/{{ $user->hasLovedRecipe($recipe) ? 'unbookmark' : 'bookmark' }}">
+                    <form method="post" action="/recipes/{{ $recipe->tracking_nr }}/{{ Auth::user()->hasLovedRecipe($recipe) ? 'unbookmark' : 'bookmark' }}">
                         <input type="hidden" name="language" value="{{ $recipe->language }}" />
                         {!! csrf_field() !!}
 
-                        @if($user->hasLovedRecipe($recipe))
+                        @if(Auth::user()->hasLovedRecipe($recipe))
                         <button type="submit" class="btn btn-default active"><i class="fa fa-heart"></i> Bewaren</button>
                         @else
                         <button type="submit" class="btn btn-default"><i class="fa fa-heart-o"></i> Bewaren</button>
@@ -31,7 +31,7 @@
         </div>
 
         <div class="col-md-6">
-            
+
             <h1>{{ $recipe->title }} <small class="pull-right">{!!$recipe->getRating('html_stars')!!} <small><a href="#comments">({{$recipe->getRating('count')}})</a></small></small></h1>
 
             @if($recipe->people != 0)
@@ -122,7 +122,7 @@
 
             {!! $recipe->getHtmlPresentation() !!}
             @endif
-           
+
         </div>
 
         <div class="col-md-3 sidebar">
@@ -140,7 +140,7 @@
                 @endif
             @endforeach
         </div>
-            
+
         <div class="col-md-9" id="comments">
             <h3 class="text-left">Reacties
                 @if(Auth::user())
@@ -153,16 +153,16 @@
                 {!! csrf_field() !!}
                 <!-- Form Name -->
                 <legend>Laat een reactie achter!</legend>
-                
+
                 <!-- Text input-->
                 <div class="form-group">
-                  <label class="col-md-2 control-label" for="title">Titel*</label>  
+                  <label class="col-md-2 control-label" for="title">Titel*</label>
                   <div class="col-md-8">
                   <input id="title" name="title" type="text" placeholder="Titel van je review" class="form-control input-md" required="">
-                    
+
                   </div>
                 </div>
-                
+
                 <!-- Multiple Radios (inline) -->
                 <div class="form-group">
                   <label class="col-md-2 control-label" for="rating">Rating
@@ -172,19 +172,19 @@
                     <label class="radio-inline" for="rating-0">
                       <input type="radio" name="rating" id="rating-0" value="1">
                       1
-                    </label> 
+                    </label>
                     <label class="radio-inline" for="rating-1">
                       <input type="radio" name="rating" id="rating-1" value="2">
                       2
-                    </label> 
+                    </label>
                     <label class="radio-inline" for="rating-2">
                       <input type="radio" name="rating" id="rating-2" value="3">
                       3
-                    </label> 
+                    </label>
                     <label class="radio-inline" for="rating-3">
                       <input type="radio" name="rating" id="rating-3" value="4">
                       4
-                    </label> 
+                    </label>
                     <label class="radio-inline" for="rating-4">
                       <input type="radio" name="rating" id="rating-4" value="5">
                       5
@@ -192,19 +192,19 @@
                   </div>
 
                 </div>
-                
+
                 <!-- Textarea -->
                 <div class="form-group">
                   <label class="col-md-2 control-label" for="body">Bericht</label>
-                  <div class="col-md-8">                     
+                  <div class="col-md-8">
                     <textarea class="form-control" id="body" name="body"></textarea>
                   </div>
                 </div>
-                
+
                 <!-- Submit button -->
                 <div class="form-group">
                   <label class="col-md-2 control-label" for="body"></label>
-                  <div class="col-md-8">                     
+                  <div class="col-md-8">
                     <button type="submit" class="btn btn-success">Verstuur je reactie &raquo;</button>
                   </div>
                 </div>
@@ -213,7 +213,7 @@
 
             @endif
             <div class="row">
-        		                
+
                 <div class="list-group">
                 @if($recipe->comments->count() ==0)
                 <p class="text-center well">Geen reacties gevonden...</p>

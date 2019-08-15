@@ -1,0 +1,37 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+body, label, .checkbox label {
+	font-weight: 300;
+}
+
+.pagination {
+    margin: 20px auto;
+}
+
+.well img,
+.docs-container img,
+.panel img {
+    max-width: 100%;
+}
+.docs-container img {
+    max-width: 80%;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.sidebar .panel,
+.no-results {
+    text-align: center;
+}
+
+.recipe-body img {
+    max-width: 100%;
+}

@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +23,6 @@ class RecipesController extends Controller
 
     public function __construct(DatabaseManager $db)
     {
-        parent::__construct();
         $this->db = $db;
     }
 
@@ -122,7 +119,7 @@ class RecipesController extends Controller
         }
 
         $ingredients = $recipe->ingredients->groupBy('header');
-        
+
         return view('recipes.show')
             ->with('recipe', $recipe)
             ->with('recipes', $recipes)

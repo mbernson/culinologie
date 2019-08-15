@@ -7,7 +7,7 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
                 <h1>Gebruikers</h1>
 
-                @if(Auth::check() && $user->isAdmin())
+                @if(Auth::check() && Auth::user()->isAdmin())
                     <p><a class="btn btn-success" data-toggle="collapse" href="#userform" aria-expanded="false" aria-controls="userform" role="button"><i class="fa fa-plus"></i> Nieuwe gebruiker</a></p>
                     <div class="collapse" id="userform">
                         <div class="well">
@@ -63,22 +63,22 @@
                     </tr>
                     @foreach($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->created_at }}</td>
+                            <td>{{ Auth::user()->id }}</td>
+                            <td>{{ Auth::user()->name }}</td>
+                            <td>{{ Auth::user()->email }}</td>
+                            <td>{{ Auth::user()->created_at }}</td>
                             <td>
                                 @if($user->isApproved())
                                 <button class="btn btn-sm btn-success">Goedgekeurd!</button>
                                 @else
-                                <form method="post" action="/users/{{ $user->id }}/approve">
+                                <form method="post" action="/users/{{ Auth::user()->id }}/approve">
                                     {!! csrf_field() !!}
                                     <input type="submit" class="btn btn-sm btn-primary" value="Goedkeuren" />
                                 </form>
                                 @endif
                             </td>
                             <td>
-                                <form method="post" action="/users/{{ $user->id }}">
+                                <form method="post" action="/users/{{ Auth::user()->id }}">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="_method" value="delete" />
                                     <input type="submit" class="btn btn-sm btn-danger" value="Verwijderen" onclick="if(!confirm('Weet je het zeker?')) { return false; }" />

@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Cookbook;
 
 final class RecipesComposer

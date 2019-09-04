@@ -7,12 +7,11 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+// Font Awesome
+@import '~font-awesome/scss/font-awesome';
+
 body, label, .checkbox label {
 	font-weight: 300;
-}
-
-.pagination {
-    margin: 20px auto;
 }
 
 .well img,

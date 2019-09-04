@@ -67,13 +67,13 @@
             <p>
 	            <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a>
 
-	            <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
+	            <a class="btn btn-secondary pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
 
 	            @if(Auth::check())
 		            @if(Request::has('liked'))
-		            <a class="btn btn-default active pull-right" href="/recipes" role="button" style="margin: 0 1em;"><i class="fa fa-heart"></i> Bewaarde recepten</a>
+		            <a class="btn btn-light active pull-right" href="/recipes" role="button" style="margin: 0 1em;"><i class="fa fa-heart"></i> Bewaarde recepten</a>
 		            @else
-		            <a class="btn btn-default pull-right" href="/recipes?liked=1" role="button" style="margin: 0 1em;"><i class="fa fa-heart-o"></i> Bewaarde recepten</a>
+		            <a class="btn btn-light pull-right" href="/recipes?liked=1" role="button" style="margin: 0 1em;"><i class="fa fa-heart-o"></i> Bewaarde recepten</a>
 		            @endif
 	            @endif
             </p>
@@ -108,8 +108,9 @@
         </div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-10 col-md-offset-2">
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
             {!! $recipes->render() !!}
         </div>
 	</div>

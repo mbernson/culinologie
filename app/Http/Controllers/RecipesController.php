@@ -80,7 +80,7 @@ class RecipesController extends Controller
      *
      * @return Response
      */
-    public function store($cookbook = null)
+    public function store(Request $request, $cookbook = null)
     {
         $recipe = new Recipe();
         $recipe->user_id = Auth::user()->id;
@@ -89,7 +89,7 @@ class RecipesController extends Controller
             $recipe->cookbook = $cookbook;
         }
 
-        return $this->saveRecipe($recipe);
+        return $this->saveRecipe($request, $recipe);
     }
 
     /**

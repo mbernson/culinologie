@@ -37,7 +37,11 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        if (env('REGISTRATION_ENABLED', false)) {
+            $this->middleware('guest');
+        } else {
+            $this->middleware('auth');
+        }
     }
 
     /**

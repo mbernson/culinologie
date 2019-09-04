@@ -22,7 +22,7 @@
                     <select multiple class="form-control" name="lang[]">
                         @foreach($available_languages as $code)
                             <option value="{{ $code }}" {{ in_array($code, $chosen_languages) ? 'selected' : '' }}>
-                                {{ $languages[$code] or $code }}
+                                {{ isset($languages[$code]) ? $languages[$code] : $code }}
                             </option>
                         @endforeach
                     </select>
@@ -66,7 +66,7 @@
 
             <p>
 	            <a class="btn btn-success" href="/recipes/create" role="button"><i class="fa fa-plus"></i> Nieuw recept</a>
-	            
+
 	            <a class="btn btn-default pull-right" href="/recipes/random" role="button"><i class="fa fa-random"></i> Verras me</a>
 
 	            @if(Auth::check())

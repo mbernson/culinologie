@@ -35,7 +35,7 @@ class RecipeCategoryManyToMany extends Migration
 
         // Get all the unique categories and migrate them to the new categories table
         $categories = Recipe::all()->pluck('category')->toArray();
-        $categories = array_unique($categories);
+        $categories = array_filter(array_unique($categories));
 
         // Store the new category models into a map to convert the old values later
         $newCategoryMap = [];

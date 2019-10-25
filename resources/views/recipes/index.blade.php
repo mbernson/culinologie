@@ -90,14 +90,14 @@
                 <tr>
                     <th>Volgnr.</th>
                     <th>Titel</th>
-                    <th>Categorie</th>
+                    <th>Categorie&euml;n</th>
                     <th>Kookboek</th>
                 </tr>
                 @foreach($recipes as $recipe)
                 <tr>
                     <td><a href="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">{{ $recipe->tracking_nr }}</a></td>
                     <td><a href="/recipes/{{ $recipe->tracking_nr }}?lang={{ $recipe->language }}">{{ $recipe->title }}</a></td>
-                    <td>{{ $recipe->category }}</td>
+                    <td>{{ $recipe->formatted_categories }}</td>
                     <td><a href="/cookbooks/{{ $recipe->cookbook }}/recipes">{{ $recipe->cookbook }}</a></td>
                 </tr>
                 @endforeach

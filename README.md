@@ -4,7 +4,7 @@ This is a web-based cookbook application, built for a project at the
 [University of applied sciences, Leiden](http://www.hsleiden.nl/informatica).
 The application lets people store and manage share and print their cooking recipes.
 
-The project is built with Laravel 5 and MySQL.
+The project is built with Laravel 6 and MySQL.
 
 ## Setup
 
@@ -18,7 +18,8 @@ Brief setup steps:
 
 **TODO**: Set up a Vagrant box for development.
 
-* The `gulp` command will re-compile the LESS/SASS stylesheets.
+* Use `yarn watch` to compile SASS/JS while developing
+* Run `yarn prod` before committing
 
 ## License
 

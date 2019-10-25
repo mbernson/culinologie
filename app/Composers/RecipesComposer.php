@@ -1,5 +1,6 @@
 <?php namespace App\Composers;
 
+use App\Models\Category;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Auth;
@@ -56,13 +57,8 @@ final class RecipesComposer
 
     public function categories(View $view)
     {
-        $view->with('categories',
-            $this->db->table('recipes')
-            ->select('category')
-            ->groupBy('category')
-            ->orderBy('category', 'asc')
-            ->pluck('category')
-        );
+        $categories = Category::orderBy('name', 'ASC')->get();
+        $view->with('categories', $categories);
     }
 
     public function allCookbooks(View $view)

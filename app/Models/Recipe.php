@@ -5,7 +5,50 @@ use App\Models\Ingredient;
 use App\Traits\HasVisibilities;
 use Parsedown;
 
-final class Recipe extends Model
+final /**
+ * App\Models\Recipe
+ *
+ * @property int $id
+ * @property int $tracking_nr
+ * @property string $language
+ * @property string $title
+ * @property int $people
+ * @property string|null $temperature
+ * @property string|null $season
+ * @property int $year
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $description
+ * @property string|null $presentation
+ * @property string|null $cookbook
+ * @property int|null $visibility
+ * @property int $user_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Cookbook|null $cookbookRel
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Ingredient[] $ingredients
+ * @property-read int|null $ingredients_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereCookbook($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereLanguage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe wherePeople($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe wherePresentation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereSeason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereTemperature($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereTrackingNr($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereVisibility($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereYear($value)
+ * @mixin \Eloquent
+ */
+class Recipe extends Model
 {
 
     protected $fillable = ['title', 'people', 'year', 'season',
@@ -14,19 +57,36 @@ final class Recipe extends Model
 
     // Relations
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function ingredients()
     {
-        return $this->hasMany('App\Models\Ingredient');
+        return $this->hasMany(Ingredient::class);
     }
 
-    public function cookbook_rel()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function cookbookRel()
     {
-        return $this->belongsTo('App\Models\Cookbook', 'cookbook', 'slug');
+        return $this->belongsTo(Cookbook::class, 'cookbook', 'slug');
     }
-    
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function comments()
     {
-        return $this->hasMany('App\Models\Comment', 'recipe_tracking_nr', 'tracking_nr');
+        return $this->hasMany(Comment::class, 'recipe_tracking_nr', 'tracking_nr');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'recipe_categories');
     }
 
     // Global scopes
@@ -35,12 +95,12 @@ final class Recipe extends Model
 
     // Helpers
     
-    public function getRating($output = "average")
+    public function getRating($output = 'average')
     {
         $ratings = $this->comments();
         $count = $ratings->whereNotNull('rating')->count();
-        $average = number_format($ratings->avg('rating'),1);
-        switch($output){
+        $average = number_format($ratings->avg('rating'), 1);
+        switch ($output) {
             case 'average':
                 return $average;
                 break;
@@ -52,28 +112,16 @@ final class Recipe extends Model
                 break;
             case 'html_stars':
                 $output ='';
-                for($i=1;$i<=5;$i++) {
-                  if($i <= $average) {
-                	$output .= '<i class="fa fa-star"></i>';
-                  } else {
-                	$output .= '<i class="fa fa-star-o"></i>';
-                  }
+                for ($i=1; $i<=5; $i++) {
+                    if ($i <= $average) {
+                        $output .= '<i class="fa fa-star"></i>';
+                    } else {
+                        $output .= '<i class="fa fa-star-o"></i>';
+                    }
                 }
                 return $output;
                 break;
         }
-    }
-    
-    public static function categories(array $languages)
-    {
-        return static::select('category')
-            ->distinct()
-            ->whereIn('language', $languages)
-            ->whereRaw('category is not null')
-            ->where('category', '!=', '')
-            ->orderBy('category')
-            ->pluck('category')
-            ->all();
     }
 
     // Getters
@@ -82,9 +130,18 @@ final class Recipe extends Model
     {
         if (array_key_exists('description', $this->attributes)) {
             return preg_replace('/### ?(\w|\d| )+\n?$/', '', $this->attributes['description']);
-        } else {
-            return '';
         }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormattedCategoriesAttribute()
+    {
+        $categories = $this->categories->pluck('name')->toArray();
+        return implode(', ', $categories);
     }
 
     public function textIngredients()
@@ -92,7 +149,8 @@ final class Recipe extends Model
         return join("\n", $this->ingredients->pluck('text')->all());
     }
 
-    public static function parseIngredientsFromText($text) {
+    public static function parseIngredientsFromText($text)
+    {
         $header = null;
         $ingredients = [];
 

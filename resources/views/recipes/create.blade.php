@@ -75,11 +75,10 @@
             </div>
 
             <div class="form-group">
-                <label for="category">Categorie</label>
-                <select class="form-control" name="category">
-                    <option value="">Geen categorie</option>
+                <label for="category">Categorie&euml;n</label>
+                <select class="form-control" multiple name="categories[]">
                     @foreach($categories as $cat)
-                    <option value="{{ $cat }}" {{ $recipe->category == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                        <option value="{{ $cat->id }}" {{ $recipe->categories->contains('id', $cat->id) ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
             </div>

@@ -63,25 +63,25 @@
                     </tr>
                     @foreach($users as $user)
                         <tr>
-                            <td>{{ Auth::user()->id }}</td>
-                            <td>{{ Auth::user()->name }}</td>
-                            <td>{{ Auth::user()->email }}</td>
-                            <td>{{ Auth::user()->created_at }}</td>
+                            <td>{{ $user->getKey() }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->created_at }}</td>
                             <td>
                                 @if($user->isApproved())
                                 <button class="btn btn-sm btn-success">Goedgekeurd!</button>
                                 @else
-                                <form method="post" action="/users/{{ Auth::user()->id }}/approve">
+                                <form method="post" action="/users/{{ $user->getKey() }}/approve">
                                     {!! csrf_field() !!}
                                     <input type="submit" class="btn btn-sm btn-primary" value="Goedkeuren" />
                                 </form>
                                 @endif
                             </td>
                             <td>
-                                <form method="post" action="/users/{{ Auth::user()->id }}">
+                                <form method="post" action="/users/{{ $user->getKey() }}">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="_method" value="delete" />
-                                    <input type="submit" class="btn btn-sm btn-danger" value="Verwijderen" onclick="if(!confirm('Weet je het zeker?')) { return false; }" />
+                                    <input type="submit" class="btn btn-sm btn-danger" value="Verwijderen" onclick="if(!confirm('Weet je het zeker? Alle kookboeken en recepten van deze gebruiker worden ook verwijderd.')) { return false; }" />
                                 </form>
                             </td>
                         </tr>

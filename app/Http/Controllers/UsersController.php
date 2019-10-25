@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 
 class UsersController extends Controller
@@ -22,6 +22,7 @@ class UsersController extends Controller
     {
         $users = User::orderBy('created_at', 'desc')
             ->paginate();
+
         return view('users.index')->with('users', $users);
     }
 
@@ -116,13 +117,18 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
 
+        if ($user->getKey() == Auth::user()->getKey()) {
+            return redirect()->back()
+                ->with('warning', 'Je kunt jezelf niet verwijderen.');
+        }
+
         try {
             $user->delete();
             return redirect()->route('users.index')
                 ->with('status', 'Gebruiker verwijderd.');
         } catch(\Exception $e) {
             return redirect()->route('users.index')
-                ->with('warning', 'Gebruiker kon niet worden verwijderd. Bestaan er nog recepten die ernaar verwijzen?');
+                ->with('warning', vsprintf('Gebruiker kon niet worden verwijderd. Bestaan er nog recepten die ernaar verwijzen? (%s)', [$e->getMessage()]));
         }
     }
 }

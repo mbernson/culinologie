@@ -16,15 +16,20 @@ class Administrator
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guest()) {
-            return $this->deny($request);
+        $user = Auth::user();
+
+        if (is_null($user)) {
+            return redirect(route('login'))->with('warning', 'Je moet ingelogd zijn om dat te kunnen doen.');
         }
-        if (! Auth::user()->isApproved()) {
+
+        if (! $user->isApproved()) {
             return redirect()->back()->with('warning', 'Je account moet goedgekeurd zijn om dat te kunnen doen.');
         }
-        if (! Auth::user()->isAdmin()) {
+
+        if (! $user->isAdmin()) {
             return redirect()->back()->with('warning', 'Je moet een beheerder zijn om dat te kunnen doen.');
         }
+
         return $next($request);
     }
 }

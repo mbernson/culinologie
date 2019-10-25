@@ -4,8 +4,10 @@
 public/uploads
 public/videos
 /node_modules
-/public/hot
-/public/storage
+public/hot
+public/css
+public/js
+public/storage
 /storage/*.key
 /vendor
 .env

@@ -82,7 +82,11 @@
                 </tr>
                 <tr>
                     <th>Categorie</th>
-                    <td><a href="/recipes/?category={{ $recipe->category }}">{{ $recipe->category }}</a></td>
+                    <td>
+                        @foreach ($recipe->categories as $category)
+                        <a href="/recipes/?category={{ $category->name }}">{{ $category->name }}</a>
+                        @endforeach
+                    </td>
                 </tr>
                 <tr>
                     <th>Temperatuur</th>

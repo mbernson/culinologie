@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Requests\SaveRecipeRequest;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -38,7 +40,6 @@ class RecipesController extends Controller
         $search->setCookbook($cookbook);
 
         $recipes = $search->buildQuery($request)
-            ->select('tracking_nr', 'title', 'category', 'cookbook', 'language')
             ->whereIn('language', $languages)
             ->orderBy('created_at', 'desc');
         $count = $recipes->count();
@@ -55,14 +56,17 @@ class RecipesController extends Controller
             ->orderBy('language', 'desc')
             ->get()->pluck('language')->all();
 
-        return view('recipes.index')
-            ->with('recipes', $recipes)
-            ->with('count', $count)
-            ->with('chosen_languages', $languages)
-            ->with('available_languages', $available_languages)
-            ->with('categories', Recipe::categories($languages))
-            ->with('hide_cookbooks', $search->shouldHideCookbooks())
-            ->with('params', $search->getParams());
+        $allCategories = Category::all()->pluck('name')->toArray();
+
+        return view('recipes.index', [
+            'recipes' => $recipes,
+            'count' => $count,
+            'chosen_languages' => $languages,
+            'available_languages' => $available_languages,
+            'categories' => $allCategories,
+            'hide_cookbooks' => $search->shouldHideCookbooks(),
+            'params' => $search->getParams()
+        ]);
     }
 
     /**
@@ -123,7 +127,7 @@ class RecipesController extends Controller
         return view('recipes.show')
             ->with('recipe', $recipe)
             ->with('recipes', $recipes)
-            ->with('cookbook', $recipe->cookbook_rel)
+            ->with('cookbook', $recipe->cookbookRel)
             ->with('ingredients', $ingredients);
     }
 
@@ -154,7 +158,7 @@ class RecipesController extends Controller
      * @param  int  $tracking_nr
      * @return Response
      */
-    public function update(Request $request, $tracking_nr)
+    public function update(SaveRecipeRequest $request, $tracking_nr)
     {
         $lang = $request->get('lang');
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
@@ -171,10 +175,18 @@ class RecipesController extends Controller
         return $this->saveRecipe($request, $recipe);
     }
 
-    private function saveRecipe(Request $request, Recipe $recipe)
+    private function saveRecipe(SaveRecipeRequest $request, Recipe $recipe)
     {
-        $input = $request->only('title', 'people', 'presentation', 'year', 'season',
-            'cookbook', 'category', 'temperature', 'visibility', 'tracking_nr'
+        $input = $request->only(
+            'title',
+            'people',
+            'presentation',
+            'year',
+            'season',
+            'cookbook',
+            'temperature',
+            'visibility',
+            'tracking_nr'
         );
 
         $recipe->fill($input);
@@ -191,9 +203,14 @@ class RecipesController extends Controller
             $recipe->description = $request->get('directions');
         }
 
+        if ($request->has('categories')) {
+            $recipe->categories()->sync($request->get('categories'));
+        }
+
         // Override the category if the user provided one.
         if (!empty($request->get('category_alt'))) {
-            $recipe->category = $request->get('category_alt');
+            $newCategory = Category::create(['name' => $request->get('category_alt')]);
+            $recipe->categories()->attach($newCategory->id);
         }
 
         try {
@@ -205,7 +222,6 @@ class RecipesController extends Controller
         }
 
         if ($request->hasFile('picture')) {
-
             $path = join(DIRECTORY_SEPARATOR, [
                 public_path(),
                 'uploads',
@@ -221,9 +237,9 @@ class RecipesController extends Controller
 
         if ($recipe_saved && $ingredients_saved) {
             return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
-        } else {
-            abort(500);
         }
+
+        abort(500);
     }
 
     /**
@@ -245,16 +261,16 @@ class RecipesController extends Controller
         if (!Auth::check()) {
             return abort(401);
         }
-        if ($recipe->cookbook_rel->user_id != $request->user()->id) {
+        if ($recipe->cookbookRel->user_id != $request->user()->id) {
             return abort(401);
         }
 
         if ($recipe->delete()) {
             return redirect()->route('recipes.index')
                 ->with('status', 'Recept verwijderd.');
-        } else {
-            return abort(500);
         }
+
+        return abort(500);
     }
 
     public function fork(Request $request, $tracking_nr)
@@ -300,7 +316,9 @@ class RecipesController extends Controller
             ->where('language', '=', $language)
             ->first();
 
-        if (!$recipe) abort(500);
+        if (!$recipe) {
+            abort(500);
+        }
 
         DB::table('recipe_bookmarks')->insert([
             'user_id' => Auth::user()->id,
@@ -321,7 +339,9 @@ class RecipesController extends Controller
             ->where('language', '=', $language)
             ->first();
 
-        if (!$recipe) abort(500);
+        if (!$recipe) {
+            abort(500);
+        }
 
         DB::table('recipe_bookmarks')
             ->where('recipe_id', $recipe['id'])
@@ -335,7 +355,7 @@ class RecipesController extends Controller
 
     public function postComment(Request $request, $trackingnr)
     {
-        $data = $request->only('title','rating','body');
+        $data = $request->only('title', 'rating', 'body');
         $comment = new Comment($data);
         $comment->user_id = Auth::user()->id;
         $comment->recipe_tracking_nr = $trackingnr;
@@ -351,9 +371,8 @@ class RecipesController extends Controller
             Session::flash('status', 'Reactie verwijderd!');
             return 1;
         }
-        else {
-            Session::flash('warning', 'Kon reactie niet verwijderen');
-            return 0;
-        }
+
+        Session::flash('warning', 'Kon reactie niet verwijderen');
+        return 0;
     }
 }

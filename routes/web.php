@@ -10,13 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', 'RecipesController@index');
-Route::get('/recipes', 'RecipesController@index');
-
 Auth::routes();
 
-Route::group(['prefix' => 'cookbooks/{slug}', 'middleware' => 'auth'], function () {
+Route::get('/', 'RecipesController@index')->name('home.index');
+
+Route::group(['prefix' => 'cookbooks/{slug}', 'as' => 'cookbooks.', 'middleware' => 'auth'], function () {
     Route::resource('recipes', 'RecipesController');
     Route::get('recipes/{recipes}/fork', 'RecipesController@fork');
     Route::post('recipes/{recipes}/bookmark', 'RecipesController@bookmark');
@@ -49,7 +47,7 @@ Route::resource('recipes', 'RecipesController', ['only' => ['index', 'show']]);
 Route::resource('cookbooks', 'CookbooksController', ['only' => ['index', 'show']]);
 
 // Help/docs
-Route::get('/help', 'DocsController@index');
-Route::get('/help/{path?}', 'DocsController@show')->where('path', '.+');
+Route::get('/help', 'DocsController@index')->name('help.index');
+Route::get('/help/{path?}', 'DocsController@show')->where('path', '.+')->name('help.show');
 
 Route::get('/logout', 'Auth\LoginController@logout');

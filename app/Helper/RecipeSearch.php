@@ -1,6 +1,7 @@
 <?php namespace App\Helper;
 	
 use App\Models\Recipe;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -52,8 +53,12 @@ final class RecipeSearch
 
         if ($request->has('category')) {
             $category = $request->get('category');
+
             if ($category != '*') {
-                $query->where('category', '=', $category);
+                $query->whereHas('categories', function (Builder $query) use ($category) {
+                    $query->where('name', $category);
+                });
+
                 $this->params['category'] = $category;
             }
         }

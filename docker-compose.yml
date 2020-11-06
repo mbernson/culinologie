@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: culinologie
+    container_name: culinologie-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - culinologie
+
+  db:
+    image: mysql:5.7
+    container_name: culinologie-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: culinologie
+      MYSQL_ROOT_PASSWORD: supersecretpassword
+      MYSQL_PASSWORD: supersecretpassword
+      MYSQL_USER: culinologie
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    networks:
+      - culinologie
+
+  nginx:
+    image: nginx:alpine
+    container_name: culinologie-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - culinologie
+
+networks:
+  culinologie:
+    driver: bridge

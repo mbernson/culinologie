@@ -16,10 +16,37 @@ Brief setup steps:
 
 ## Development
 
-**TODO**: Set up a Vagrant box for development.
+On your development machine, you will need:
 
-* Use `yarn watch` to compile SASS/JS while developing
-* Run `yarn prod` before committing
+* Docker + Docker compose (pget Docker desktop on a Mac](https://docs.docker.com/docker-for-mac/install/))
+* Node.js
+* A mysql client if you want a database shell
+
+To run a development setup:
+
+```
+# Configuration
+cp .env.example .env
+php artisan key:generate
+
+# Frontend
+npm install
+npm run dev
+
+# Start containers
+docker-compose up
+```
+
+You can then visit the site on [http://localhost:8000].
+
+To connect to the database:
+
+```
+mysql -h 127.0.0.1 -u root -p'supersecretpassword' culinologie
+```
+
+* Use `npm run watch` to compile SASS/JS while developing
+* Run `npm run prod` before deploying
 
 ## License
 

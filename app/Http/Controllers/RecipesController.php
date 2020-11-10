@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Requests\SaveRecipeRequest;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -158,7 +157,7 @@ class RecipesController extends Controller
      * @param  int  $tracking_nr
      * @return Response
      */
-    public function update(SaveRecipeRequest $request, $tracking_nr)
+    public function update(Request $request, $tracking_nr)
     {
         $lang = $request->get('lang');
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
@@ -175,7 +174,7 @@ class RecipesController extends Controller
         return $this->saveRecipe($request, $recipe);
     }
 
-    private function saveRecipe(SaveRecipeRequest $request, Recipe $recipe)
+    private function saveRecipe(Request $request, Recipe $recipe)
     {
         $input = $request->only(
             'title',
@@ -203,6 +202,14 @@ class RecipesController extends Controller
             $recipe->description = $request->get('directions');
         }
 
+        try {
+            $recipe_saved = $recipe->save();
+        } catch (QueryException $e) {
+            $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
+            $recipe_saved = $recipe->save();
+            Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
+        }
+
         if ($request->has('categories')) {
             $recipe->categories()->sync($request->get('categories'));
         }
@@ -210,15 +217,7 @@ class RecipesController extends Controller
         // Override the category if the user provided one.
         if (!empty($request->get('category_alt'))) {
             $newCategory = Category::create(['name' => $request->get('category_alt')]);
-            $recipe->categories()->attach($newCategory->id);
-        }
-
-        try {
-            $recipe_saved = $recipe->save();
-        } catch (QueryException $e) {
-            $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
-            $recipe_saved = $recipe->save();
-            Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
+            $recipe->categories()->attach($newCategory->getKey());
         }
 
         if ($request->hasFile('picture')) {
@@ -236,7 +235,7 @@ class RecipesController extends Controller
         $ingredients_saved = $recipe->saveIngredientsFromText($request->get('ingredients'));
 
         if ($recipe_saved && $ingredients_saved) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
+            return redirect()->route('recipes.show', [$recipe->tracking_nr])->with('lang', $recipe->language);
         }
 
         abort(500);
@@ -301,7 +300,7 @@ class RecipesController extends Controller
             ->orderByRaw('RAND()')
             ->first();
 
-        return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])
+        return redirect()->route('recipes.show', [$recipe->tracking_nr])
             ->with('lang', $recipe->language);
     }
 
@@ -326,7 +325,7 @@ class RecipesController extends Controller
             'recipe_id' => $recipe['id']
         ]);
 
-        return redirect()->route('recipes.show', ['recipes' => $tracking_nr])
+        return redirect()->route('recipes.show', [$tracking_nr])
             ->with('lang', $language);
     }
 
@@ -349,7 +348,7 @@ class RecipesController extends Controller
             ->where('list', $list)
             ->delete();
 
-        return redirect()->route('recipes.show', ['recipes' => $tracking_nr])
+        return redirect()->route('recipes.show', [$tracking_nr])
             ->with('lang', $language);
     }
 

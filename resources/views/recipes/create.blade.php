@@ -109,11 +109,11 @@
                     <option value="{{ $code }}">{{ $season }}</option>
                     @endforeach
                 </select>
-            </div> 
+            </div>
 
             <div class="form-group">
                 <label for="year">Jaar</label>
-                <input type="number" class="form-control" name="year" value="{{ $recipe->year or date('Y') }}" />
+                <input type="number" class="form-control" name="year" value="{{ empty($recipe->year) ? date('Y') : $recipe->year }}" />
             </div>
 
             <div class="form-group">

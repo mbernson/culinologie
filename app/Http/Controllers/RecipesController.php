@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Helper\RecipeSearch;
+use App\Http\Requests\SaveRecipeRequest;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Recipe;
-use App\Requests\SaveRecipeRequest;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB, Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Image;
 
@@ -80,7 +81,7 @@ class RecipesController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request, $cookbook = null)
+    public function store(SaveRecipeRequest $request, $cookbook = null)
     {
         $recipe = new Recipe();
         $recipe->user_id = Auth::user()->id;
@@ -149,7 +150,6 @@ class RecipesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @return Response
      */
     public function update(SaveRecipeRequest $request, int $tracking_nr)
     {
@@ -229,7 +229,7 @@ class RecipesController extends Controller
         $ingredients_saved = $recipe->saveIngredientsFromText($request->get('ingredients'));
 
         if ($recipe_saved && $ingredients_saved) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
+            return redirect()->route('recipes.show', ['recipe' => $recipe->tracking_nr])->with('lang', $recipe->language);
         }
 
         abort(500);

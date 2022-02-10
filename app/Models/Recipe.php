@@ -4,6 +4,9 @@ namespace App\Models;
 
 use App\Traits\HasVisibilities;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Parsedown;
 
  class Recipe extends Model
@@ -15,7 +18,7 @@ use Parsedown;
      // Relations
 
      /**
-      * @return \Illuminate\Database\Eloquent\Relations\HasMany
+      * @return HasMany
       */
      public function ingredients()
      {
@@ -23,7 +26,7 @@ use Parsedown;
      }
 
      /**
-      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+      * @return BelongsTo
       */
      public function cookbookRel()
      {
@@ -31,7 +34,7 @@ use Parsedown;
      }
 
      /**
-      * @return \Illuminate\Database\Eloquent\Relations\HasMany
+      * @return HasMany
       */
      public function comments()
      {
@@ -39,7 +42,7 @@ use Parsedown;
      }
 
      /**
-      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+      * @return BelongsToMany
       */
      public function categories()
      {

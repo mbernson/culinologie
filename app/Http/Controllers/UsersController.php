@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -86,7 +88,7 @@ class UsersController extends Controller
      * Grant the user login and access to the application.
      *
      * @param $id
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse|void
      */
     public function approve($id)
     {
@@ -120,7 +122,7 @@ class UsersController extends Controller
             $user->delete();
             return redirect()->route('users.index')
                 ->with('status', 'Gebruiker verwijderd.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->route('users.index')
                 ->with('warning', vsprintf('Gebruiker kon niet worden verwijderd. Bestaan er nog recepten die ernaar verwijzen? (%s)', [$e->getMessage()]));
         }

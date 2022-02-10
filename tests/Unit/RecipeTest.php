@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class RecipeTest extends TestCase
 {
-    private \App\Models\Recipe $recipe;
+    private Recipe $recipe;
 
     public function setUp(): void
     {

@@ -34,6 +34,6 @@ use Illuminate\Database\Eloquent\Model;
 
      public function owner()
      {
-         return $this->belongsTo(\App\Models\User::class, 'user_id');
+         return $this->belongsTo(User::class, 'user_id');
      }
  }

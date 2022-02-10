@@ -24,7 +24,7 @@ class Ingredient extends Model
 
     public function recipe()
     {
-        return $this->belongsTo(\App\Models\Recipe::class);
+        return $this->belongsTo(Recipe::class);
     }
 
     public function parse()

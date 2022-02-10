@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Model;
 
      public function author()
      {
-         return $this->belongsTo(\App\Models\User::class, 'user_id');
+         return $this->belongsTo(User::class, 'user_id');
      }
 
      public function recipe()
      {
-         return $this->belongsTo(\App\Models\Recipe::class, 'recipe_tracking_nr', 'tracking_nr');
+         return $this->belongsTo(Recipe::class, 'recipe_tracking_nr', 'tracking_nr');
      }
 
      public function getHtmlStars()

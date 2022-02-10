@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function bookmarks()
     {
-        return $this->belongsToMany(\App\Models\Recipe::class, 'recipe_bookmarks', 'user_id', 'recipe_id');
+        return $this->belongsToMany(Recipe::class, 'recipe_bookmarks', 'user_id', 'recipe_id');
     }
 
     public function lovedRecipes()

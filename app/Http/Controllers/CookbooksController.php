@@ -28,16 +28,6 @@ class CookbooksController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @return Response
@@ -61,45 +51,5 @@ class CookbooksController extends Controller
         } else {
             abort(500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @return Response
-     */
-    public function show(int $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     */
-    public function edit(int $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @return Response
-     */
-    public function update(int $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return Response
-     */
-    public function destroy(int $id)
-    {
-        //
     }
 }

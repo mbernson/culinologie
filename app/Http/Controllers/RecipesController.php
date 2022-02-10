@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helper\RecipeSearch;
 use App\Models\Category;
 use App\Models\Comment;
-use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Requests\SaveRecipeRequest;
 use Illuminate\Database\DatabaseManager;

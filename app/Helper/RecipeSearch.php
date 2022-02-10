@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 
 final class RecipeSearch
 {
-    private $params = [
+    private array $params = [
         'cookbook' => null,
         'category' => null,
         'title' => null,
         'query' => null,
     ];
 
-    private $cookbook = '*';
+    private string $cookbook = '*';
 
     public function __construct(array $params = [])
     {

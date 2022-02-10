@@ -20,11 +20,11 @@ final class VisibilityScope implements Scope
 {
 
     // The item is visible to anyone
-    const VISIBILITY_PUBLIC = 0;
+    public const VISIBILITY_PUBLIC = 0;
     // The item is only visible to its owner
-    const VISIBILITY_PRIVATE = 1;
+    public const VISIBILITY_PRIVATE = 1;
     // The item is only visible to its owner and other logged in users
-    const VISIBILITY_LOGGED_IN = 2;
+    public const VISIBILITY_LOGGED_IN = 2;
 
     private $tableName;
 

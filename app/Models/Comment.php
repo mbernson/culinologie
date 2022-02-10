@@ -37,12 +37,12 @@ class Comment extends Model
 
     public function author()
     {
-        return $this->belongsTo('App\User', 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
     
     public function recipe()
     {
-        return $this->belongsTo('App\Models\Recipe', 'recipe_tracking_nr', 'tracking_nr');
+        return $this->belongsTo(\App\Models\Recipe::class, 'recipe_tracking_nr', 'tracking_nr');
     }
     
     public function getHtmlStars()

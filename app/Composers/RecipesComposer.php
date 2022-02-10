@@ -16,7 +16,7 @@ final class RecipesComposer
         $this->db = $db;
     }
 
-    private $static_data = [
+    private array $static_data = [
         'languages' => [
             'nl' => 'Nederlands',
             'uk' => 'Engels (Groot Brittanië)',

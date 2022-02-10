@@ -20,8 +20,8 @@ class RecipesController extends Controller
 {
     private $db;
 
-    private static $per_page = 25;
-    private static $default_language = 'nl';
+    private static int $per_page = 25;
+    private static string $default_language = 'nl';
 
     public function __construct(DatabaseManager $db)
     {
@@ -99,10 +99,9 @@ class RecipesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id)
     {
         $recipes = Recipe::where('tracking_nr', '=', $id)
             ->orderBy('language', 'asc')->get();
@@ -134,10 +133,9 @@ class RecipesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, int $id)
     {
         $lang = $request->get('lang', static::$default_language);
         $recipe = Recipe::where('tracking_nr', '=', $id)
@@ -155,10 +153,9 @@ class RecipesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $tracking_nr
      * @return Response
      */
-    public function update(SaveRecipeRequest $request, $tracking_nr)
+    public function update(SaveRecipeRequest $request, int $tracking_nr)
     {
         $lang = $request->get('lang');
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
@@ -245,10 +242,9 @@ class RecipesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id)
     {
         if (!$request->has('lang')) {
             return abort(500);
@@ -305,7 +301,7 @@ class RecipesController extends Controller
             ->with('lang', $recipe->language);
     }
 
-    const DEFAULT_LIST = 'Loved';
+    public const DEFAULT_LIST = 'Loved';
 
     public function bookmark(Request $request, $tracking_nr)
     {

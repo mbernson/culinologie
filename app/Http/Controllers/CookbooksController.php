@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CookbooksController extends Controller
 {
 
-    private static $per_page = 20;
+    private static int $per_page = 20;
 
     /**
      * Display a listing of the resource.
@@ -68,10 +68,9 @@ class CookbooksController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         //
     }
@@ -79,10 +78,9 @@ class CookbooksController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         //
     }
@@ -90,10 +88,9 @@ class CookbooksController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function update($id)
+    public function update(int $id)
     {
         //
     }
@@ -101,10 +98,9 @@ class CookbooksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         //
     }

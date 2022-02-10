@@ -16,7 +16,7 @@ class CreateIngredientsTable extends Migration {
 		{
 			$table->bigInteger('id', true)->unsigned();
 			$table->integer('recipe_id')->unsigned()->index('index_recipe_id');
-			$table->text('text', 65535);
+			$table->text('text');
 			$table->string('amount')->nullable();
 			$table->string('unit', 32)->nullable();
 			$table->string('header')->nullable();

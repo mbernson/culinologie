@@ -24,8 +24,8 @@ class CreateRecipesTable extends Migration {
 			$table->string('season')->nullable();
 			$table->integer('year')->unsigned();
 			$table->timestamps();
-			$table->text('description', 65535)->nullable();
-			$table->text('presentation', 65535)->nullable();
+			$table->text('description')->nullable();
+			$table->text('presentation')->nullable();
 			$table->string('cookbook')->nullable()->default('')->index('fk_cookbook_slug');
 			$table->boolean('visibility')->nullable()->default(0);
 			$table->integer('user_id')->unsigned()->index('fk_recipe_user_id');

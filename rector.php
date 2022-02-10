@@ -12,7 +12,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     // get parameters
     $parameters = $containerConfigurator->parameters();
     $parameters->set(Option::PATHS, [
-        __DIR__ . '/app'
+        __DIR__ . '/app',
+        __DIR__ . '/database',
+        __DIR__ . '/tests',
     ]);
 
     $containerConfigurator->import(LaravelLevelSetList::UP_TO_LARAVEL_80);

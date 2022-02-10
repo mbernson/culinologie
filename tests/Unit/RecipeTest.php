@@ -7,10 +7,7 @@ use Tests\TestCase;
 class RecipeTest extends TestCase
 {
 
-    /**
-     * @var Recipe
-     */
-    private $recipe;
+    private \App\Models\Recipe $recipe;
 
     public function setUp(): void {
         parent::setUp();

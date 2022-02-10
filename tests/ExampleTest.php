@@ -4,7 +4,6 @@ namespace Tests;
 
 class ExampleTest extends TestCase
 {
-
     /**
      * A basic functional test example.
      *

@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
-
-    public final const PER_PAGE = 25;
+    final public const PER_PAGE = 25;
 
     /**
      * Display a listing of the resource.
@@ -43,7 +41,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->get('password') !== $request->get('password_confirmation')) {
+        if ($request->get('password') !== $request->get('password_confirmation')) {
             return redirect()->back()->withInput()
                 ->with('warning', 'Wachtwoorden komen niet overeen.');
         }
@@ -90,16 +88,18 @@ class UsersController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse|void
      */
-    public function approve($id) {
+    public function approve($id)
+    {
         $approved = DB::table('users')
             ->where('id', $id)
             ->update(['approved' => 1]);
 
-        if($approved)
+        if ($approved) {
             return redirect()->route('users.index')
                 ->with('status', 'Gebruiker goedgekeurd!');
-        else
+        } else {
             return abort(500);
+        }
     }
 
     /**
@@ -120,7 +120,7 @@ class UsersController extends Controller
             $user->delete();
             return redirect()->route('users.index')
                 ->with('status', 'Gebruiker verwijderd.');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('users.index')
                 ->with('warning', vsprintf('Gebruiker kon niet worden verwijderd. Bestaan er nog recepten die ernaar verwijzen? (%s)', [$e->getMessage()]));
         }

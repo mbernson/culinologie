@@ -1,4 +1,6 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,10 +26,8 @@ final /**
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ingredient whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Ingredient whereUpdatedAt($value)
  * @mixin \Eloquent
- */
-class Ingredient extends Model
+ */ class Ingredient extends Model
 {
-
     protected $table = 'ingredients';
     public $timestamps = false;
     protected $dates = ['updated_at'];
@@ -68,13 +68,12 @@ class Ingredient extends Model
         $matches = [];
         if (preg_match('/^[\d|\.|,]+\ ?\w+\ /', (string) $this->text, $matches)) {
             $parts = explode(' ', trim($matches[0]));
-            if(count($parts) == 1) {
+            if (count($parts) == 1) {
                 preg_match('/[A-Za-z]+/', $parts[0], $matches);
                 $this->unit = $matches[0];
-            } elseif(count($parts) > 1) {
+            } elseif (count($parts) > 1) {
                 $this->unit = $parts[1];
             }
         }
     }
-
 }

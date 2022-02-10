@@ -1,10 +1,11 @@
-<?php namespace App\Helper;
-	
+<?php
+
+namespace App\Helper;
+
 use App\Models\Recipe;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 final class RecipeSearch
 {
@@ -29,11 +30,11 @@ final class RecipeSearch
         }
         
         if ($request->has('liked') && Auth::check()) {
-	        $query->whereIn('id', function ($q) {
-		        $q->select('recipe_id')
-			        ->from('recipe_bookmarks')
-			        ->where('user_id', Auth::user()->getKey());
-	        });
+            $query->whereIn('id', function ($q) {
+                $q->select('recipe_id')
+                    ->from('recipe_bookmarks')
+                    ->where('user_id', Auth::user()->getKey());
+            });
         }
 
         if ($request->has('query')) {

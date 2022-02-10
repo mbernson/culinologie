@@ -23,7 +23,7 @@ class CreateTriggers extends Migration
         	SELECT count(r.id) FROM recipes r WHERE r.cookbook = NEW.cookbook
         ) WHERE c.slug = NEW.cookbook;
         
-        END'); 
+        END');
         
         \DB::unprepared('CREATE TRIGGER cookbooks_recipes_sum_delete AFTER DELETE ON recipes
         FOR EACH ROW
@@ -45,6 +45,5 @@ class CreateTriggers extends Migration
     {
         DB::unprepared('DROP TRIGGER IF EXISTS cookbooks_recipes_sum_insert;');
         DB::unprepared('DROP TRIGGER IF EXISTS cookbooks_recipes_sum_delete;');
-
     }
 }

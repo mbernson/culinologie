@@ -1,14 +1,12 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Storage;
 use Parsedown;
 
 class DocsController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +25,7 @@ class DocsController extends Controller
         $parts = explode('/', (string) $path);
         $trail = $parts;
         array_unshift($parts, 'docs');
-        $md_path = join('/', $parts).'.md';
+        $md_path = join('/', $parts) . '.md';
 
         if (!Storage::exists($md_path)) {
             abort(404);

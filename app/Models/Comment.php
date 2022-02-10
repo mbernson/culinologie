@@ -1,4 +1,6 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,11 +29,9 @@ final /**
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Comment whereUserId($value)
  * @mixin \Eloquent
- */
-class Comment extends Model
+ */ class Comment extends Model
 {
-
-    protected $fillable = ['title', 'body', 'user_id','recipe_id','rating'];
+    protected $fillable = ['title', 'body', 'user_id', 'recipe_id', 'rating'];
 
     public $timestamps = true;
 
@@ -48,15 +48,14 @@ class Comment extends Model
     public function getHtmlStars()
     {
         $rating = $this->rating;
-        $output ='';
-        for($i=1;$i<=5;$i++) {
-          if($i <= $rating) {
-        	$output .= '<i class="fa fa-star"></i>';
-          } else {
-        	$output .= '<i class="fa fa-star-o"></i>';
-          }
+        $output = '';
+        for ($i = 1;$i <= 5;$i++) {
+            if ($i <= $rating) {
+                $output .= '<i class="fa fa-star"></i>';
+            } else {
+                $output .= '<i class="fa fa-star-o"></i>';
+            }
         }
         return $output;
-        
     }
 }

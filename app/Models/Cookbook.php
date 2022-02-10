@@ -1,7 +1,9 @@
-<?php namespace App\Models;
+<?php
 
-use Illuminate\Database\Eloquent\Model;
+namespace App\Models;
+
 use App\Traits\HasVisibilities;
+use Illuminate\Database\Eloquent\Model;
 
 final /**
  * App\Models\Cookbook
@@ -23,10 +25,8 @@ final /**
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cookbook whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cookbook whereVisibility($value)
  * @mixin \Eloquent
- */
-class Cookbook extends Model
+ */ class Cookbook extends Model
 {
-
     use HasVisibilities;
 
     protected $fillable = ['title', 'slug', 'user_id'];

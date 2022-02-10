@@ -32,5 +32,4 @@ class UserFactory extends Factory
             'admin' => true,
         ]);
     }
-
 }

@@ -1,9 +1,11 @@
-<?php namespace App\Scopes;
+<?php
 
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+namespace App\Scopes;
+
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -18,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
  */
 final class VisibilityScope implements Scope
 {
-
     // The item is visible to anyone
     public const VISIBILITY_PUBLIC = 0;
     // The item is only visible to its owner

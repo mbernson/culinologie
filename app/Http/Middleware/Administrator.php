@@ -20,11 +20,11 @@ class Administrator
             return redirect(route('login'))->with('warning', 'Je moet ingelogd zijn om dat te kunnen doen.');
         }
 
-        if (! $user->isApproved()) {
+        if (!$user->isApproved()) {
             return redirect()->back()->with('warning', 'Je account moet goedgekeurd zijn om dat te kunnen doen.');
         }
 
-        if (! $user->isAdmin()) {
+        if (!$user->isAdmin()) {
             return redirect()->back()->with('warning', 'Je moet een beheerder zijn om dat te kunnen doen.');
         }
 

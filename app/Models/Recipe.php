@@ -1,8 +1,9 @@
-<?php namespace App\Models;
+<?php
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Ingredient;
+namespace App\Models;
+
 use App\Traits\HasVisibilities;
+use Illuminate\Database\Eloquent\Model;
 use Parsedown;
 
 final /**
@@ -47,10 +48,8 @@ final /**
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereVisibility($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Recipe whereYear($value)
  * @mixin \Eloquent
- */
-class Recipe extends Model
+ */ class Recipe extends Model
 {
-
     protected $fillable = ['title', 'people', 'year', 'season',
         'description', 'presentation', 'lang', 'cookbook',
         'category', 'temperature', 'visibility', 'tracking_nr'];
@@ -108,11 +107,11 @@ class Recipe extends Model
                 return $count;
                 break;
             case 'array':
-                return ['review_count'=>$count, 'average'=>$average];
+                return ['review_count' => $count, 'average' => $average];
                 break;
             case 'html_stars':
-                $output ='';
-                for ($i=1; $i<=5; $i++) {
+                $output = '';
+                for ($i = 1; $i <= 5; $i++) {
                     if ($i <= $average) {
                         $output .= '<i class="fa fa-star"></i>';
                     } else {

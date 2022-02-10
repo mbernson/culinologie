@@ -1,20 +1,20 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use App\Helper\RecipeSearch;
 use App\Models\Category;
+use App\Models\Comment;
+use App\Models\Ingredient;
+use App\Models\Recipe;
 use App\Requests\SaveRecipeRequest;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB, Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Image;
-use App\Models\Recipe, App\Models\Ingredient;
-use App\Helper\RecipeSearch;
-use App\Models\Comment;
-
 
 class RecipesController extends Controller
 {
@@ -73,7 +73,7 @@ class RecipesController extends Controller
      */
     public function create()
     {
-        return view('recipes.create')->withRecipe(new Recipe);
+        return view('recipes.create')->withRecipe(new Recipe());
     }
 
     /**
@@ -221,10 +221,10 @@ class RecipesController extends Controller
                 'uploads',
                 'pictures'
             ]);
-            $filename = $recipe->tracking_nr.'.jpg';
+            $filename = $recipe->tracking_nr . '.jpg';
             $file = $request->file('picture')->move($path, $filename);
             $image = Image::make($file)->widen(480);
-            $image->save($path.DIRECTORY_SEPARATOR.$filename);
+            $image->save($path . DIRECTORY_SEPARATOR . $filename);
         }
 
         $ingredients_saved = $recipe->saveIngredientsFromText($request->get('ingredients'));
@@ -298,7 +298,7 @@ class RecipesController extends Controller
             ->with('lang', $recipe->language);
     }
 
-    public final const DEFAULT_LIST = 'Loved';
+    final public const DEFAULT_LIST = 'Loved';
 
     public function bookmark(Request $request, $tracking_nr)
     {
@@ -353,7 +353,7 @@ class RecipesController extends Controller
         $comment->user_id = Auth::user()->id;
         $comment->recipe_tracking_nr = $trackingnr;
         $comment->save();
-        return Redirect::to('recipes/'.$trackingnr);
+        return Redirect::to('recipes/' . $trackingnr);
     }
 
     public function deleteComment(Request $request, $recipe_id, $comment_id)

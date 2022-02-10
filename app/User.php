@@ -3,9 +3,8 @@
 namespace App;
 
 use App\Models\Recipe;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\User
@@ -70,27 +69,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function bookmarks() {
+    public function bookmarks()
+    {
         return $this->belongsToMany(\App\Models\Recipe::class, 'recipe_bookmarks', 'user_id', 'recipe_id');
     }
 
-    public function lovedRecipes() {
+    public function lovedRecipes()
+    {
         return $this->bookmarks()->wherePivot('list', 'Loved');
     }
 
-    public function hasLovedRecipe(Recipe $recipe) {
+    public function hasLovedRecipe(Recipe $recipe)
+    {
         return $this->lovedRecipes()->where('id', $recipe->id)->count() > 0;
     }
 
-    public function setPasswordAttribute($value) {
+    public function setPasswordAttribute($value)
+    {
         $this->attributes['password'] = bcrypt($value);
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->admin == 1;
     }
 
-    public function isApproved() {
+    public function isApproved()
+    {
         return $this->approved == 1;
     }
 }

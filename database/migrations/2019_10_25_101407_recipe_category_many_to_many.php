@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Recipe;
 use App\Models\Category;
+use App\Models\Recipe;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -43,7 +43,7 @@ class RecipeCategoryManyToMany extends Migration
             $newCategoryMap[$category] = Category::create(['name' => $category]);
         }
 
-        /* @var Recipe[] $recipes */
+        /** @var Recipe[] $recipes */
         $recipes = Recipe::all();
 
         foreach ($recipes as $recipe) {

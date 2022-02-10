@@ -15,7 +15,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/app'
     ]);
 
-    $containerConfigurator->import(LaravelLevelSetList::UP_TO_LARAVEL_70);
+    $containerConfigurator->import(LaravelLevelSetList::UP_TO_LARAVEL_80);
 
     // Define what rule sets will be applied
     $containerConfigurator->import(LevelSetList::UP_TO_PHP_74);

@@ -7,7 +7,7 @@
             <div class="col-sm-12 col-md-12 col-lg-12">
                 <h1>Gebruikers</h1>
 
-                @if(Auth::check() && Auth::user()->isAdmin())
+                @if(Auth::check() && Auth::user()->is_admin)
                     <p><a class="btn btn-success" data-toggle="collapse" href="#userform" aria-expanded="false" aria-controls="userform" role="button"><i class="fa fa-plus"></i> Nieuwe gebruiker</a></p>
                     <div class="collapse" id="userform">
                         <div class="well">
@@ -68,7 +68,7 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at }}</td>
                             <td>
-                                @if($user->isApproved())
+                                @if($user->is_approved)
                                 <button class="btn btn-sm btn-success">Goedgekeurd!</button>
                                 @else
                                 <form method="post" action="/users/{{ $user->getKey() }}/approve">

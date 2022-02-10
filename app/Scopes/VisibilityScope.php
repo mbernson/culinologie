@@ -33,7 +33,7 @@ final class VisibilityScope implements Scope
     {
         $this->tableName = $model->getTable();
 
-        if (Auth::check() && Auth::user()->isApproved()) {
+        if (Auth::check() && Auth::user()->is_approved) {
             $this->applyLoggedInScope($builder, Auth::user());
         } else {
             $this->applyPublicScope($builder);

@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-use function bcrypt;
 
 class User extends Authenticatable
 {
@@ -36,6 +35,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
     public function bookmarks()
@@ -48,23 +49,15 @@ class User extends Authenticatable
         return $this->bookmarks()->wherePivot('list', 'Loved');
     }
 
-    public function hasLovedRecipe(Recipe $recipe)
+    public function hasLovedRecipe(Recipe $recipe): bool
     {
-        return $this->lovedRecipes()->where('id', $recipe->id)->count() > 0;
+        return $this->lovedRecipes()->where('id', $recipe->id)->exists();
     }
 
-    public function setPasswordAttribute($value)
+    protected function password(): Attribute
     {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
-    public function isAdmin()
-    {
-        return $this->admin == 1;
-    }
-
-    public function isApproved()
-    {
-        return $this->approved == 1;
+        return new Attribute(
+            set: fn($value) => bcrypt($value),
+        );
     }
 }

@@ -58,7 +58,7 @@ class Ingredient extends Model
     private function parse_amount()
     {
         $matches = [];
-        if (preg_match('/^[\d|\.|,]+/', $this->text, $matches)) {
+        if (preg_match('/^[\d|\.|,]+/', (string) $this->text, $matches)) {
             $this->amount = $matches[0];
         }
     }
@@ -66,7 +66,7 @@ class Ingredient extends Model
     private function parse_unit()
     {
         $matches = [];
-        if (preg_match('/^[\d|\.|,]+\ ?\w+\ /', $this->text, $matches)) {
+        if (preg_match('/^[\d|\.|,]+\ ?\w+\ /', (string) $this->text, $matches)) {
             $parts = explode(' ', trim($matches[0]));
             if(count($parts) == 1) {
                 preg_match('/[A-Za-z]+/', $parts[0], $matches);

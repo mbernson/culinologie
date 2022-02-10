@@ -11,7 +11,7 @@ use App\Http\Requests;
 class UsersController extends Controller
 {
 
-    public const PER_PAGE = 25;
+    public final const PER_PAGE = 25;
 
     /**
      * Display a listing of the resource.
@@ -39,7 +39,6 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
      * @return Response
      */
     public function store(Request $request)

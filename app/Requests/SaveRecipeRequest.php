@@ -6,9 +6,6 @@ namespace App\Requests;
  */
 class SaveRecipeRequest extends BaseRequest
 {
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         $rules = [

@@ -9,11 +9,8 @@ use App\Models\Cookbook;
 final class RecipesComposer
 {
 
-    private $db;
-
-    public function __construct(DatabaseManager $db)
+    public function __construct(private readonly DatabaseManager $db)
     {
-        $this->db = $db;
     }
 
     private array $static_data = [

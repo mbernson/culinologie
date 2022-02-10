@@ -154,7 +154,7 @@ class Recipe extends Model
         $header = null;
         $ingredients = [];
 
-        foreach (preg_split("/((\r?\n)|(\r\n?))/", $text) as $line) {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", (string) $text) as $line) {
             $line = trim($line);
 
             if (preg_match('/^###?#? ?[\w|\d| ]+/', $line)) {

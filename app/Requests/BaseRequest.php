@@ -13,7 +13,6 @@ abstract class BaseRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @return bool
      * @throws ValidationException
      */
     public function authorize(): bool

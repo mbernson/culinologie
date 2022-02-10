@@ -24,7 +24,7 @@ class DocsController extends Controller
 
     public function show($path)
     {
-        $parts = explode('/', $path);
+        $parts = explode('/', (string) $path);
         $trail = $parts;
         array_unshift($parts, 'docs');
         $md_path = join('/', $parts).'.md';

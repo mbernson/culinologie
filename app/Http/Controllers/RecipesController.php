@@ -18,14 +18,11 @@ use App\Models\Comment;
 
 class RecipesController extends Controller
 {
-    private $db;
-
     private static int $per_page = 25;
     private static string $default_language = 'nl';
 
-    public function __construct(DatabaseManager $db)
+    public function __construct(private readonly DatabaseManager $db)
     {
-        $this->db = $db;
     }
 
     /**
@@ -212,7 +209,7 @@ class RecipesController extends Controller
 
         try {
             $recipe_saved = $recipe->save();
-        } catch (QueryException $e) {
+        } catch (QueryException) {
             $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
             $recipe_saved = $recipe->save();
             Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
@@ -301,7 +298,7 @@ class RecipesController extends Controller
             ->with('lang', $recipe->language);
     }
 
-    public const DEFAULT_LIST = 'Loved';
+    public final const DEFAULT_LIST = 'Loved';
 
     public function bookmark(Request $request, $tracking_nr)
     {

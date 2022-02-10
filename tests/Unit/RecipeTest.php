@@ -1,6 +1,8 @@
 <?php
+namespace Tests\Unit;
 
 use App\Models\Recipe;
+use Tests\TestCase;
 
 class RecipeTest extends TestCase
 {
@@ -10,7 +12,8 @@ class RecipeTest extends TestCase
      */
     private $recipe;
 
-    public function setUp() {
+    public function setUp(): void {
+        parent::setUp();
         $this->recipe = new Recipe();
     }
 

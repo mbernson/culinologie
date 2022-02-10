@@ -80,7 +80,7 @@ final class RecipeSearch
         return $this->cookbook != '*';
     }
 
-    public function setCookbook($cookbook)
+    public function setCookbook(string $cookbook)
     {
         $this->cookbook = $cookbook;
     }

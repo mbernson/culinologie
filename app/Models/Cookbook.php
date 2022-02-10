@@ -5,8 +5,7 @@ namespace App\Models;
 use App\Traits\HasVisibilities;
 use Illuminate\Database\Eloquent\Model;
 
-final /**
- * App\Models\Cookbook
+ /* App\Models\Cookbook
  *
  * @property int $id
  * @property string $title
@@ -14,7 +13,7 @@ final /**
  * @property int $user_id
  * @property int $recipes_count
  * @property int $visibility
- * @property-read \App\User $owner
+ * @property-read \App\Models\User $owner
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cookbook newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cookbook newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cookbook query()
@@ -26,15 +25,15 @@ final /**
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Cookbook whereVisibility($value)
  * @mixin \Eloquent
  */ class Cookbook extends Model
-{
-    use HasVisibilities;
+ {
+     use HasVisibilities;
 
-    protected $fillable = ['title', 'slug', 'user_id'];
+     protected $fillable = ['title', 'slug', 'user_id'];
 
-    public $timestamps = false;
+     public $timestamps = false;
 
-    public function owner()
-    {
-        return $this->belongsTo(\App\User::class, 'user_id');
-    }
-}
+     public function owner()
+     {
+         return $this->belongsTo(\App\Models\User::class, 'user_id');
+     }
+ }

@@ -9,15 +9,14 @@ class DocsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return Response
      */
     public function index()
     {
         $content = Storage::get('docs/index.md');
-        return view('docs.show')
-            ->withContent(Parsedown::instance()->text($content))
-            ->withTitle('Help');
+        return view('docs.show', [
+            'title' => 'Help',
+            'content' => Parsedown::instance()->text($content),
+        ]);
     }
 
     public function show($path)
@@ -32,9 +31,10 @@ class DocsController extends Controller
         }
 
         $content = Storage::get($md_path);
-        return view('docs.show')
-            ->withContent(Parsedown::instance()->text($content))
-            ->withTrail($trail)
-            ->withTitle('Help');
+        return view('docs.show', [
+            'title' => 'Help',
+            'trail' => $trail,
+            'content' => Parsedown::instance()->text($content),
+        ]);
     }
 }

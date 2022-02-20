@@ -1,20 +1,22 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Models\Recipe;
+use Tests\TestCase;
 
 class RecipeTest extends TestCase
 {
+    private Recipe $recipe;
 
-    /**
-     * @var Recipe
-     */
-    private $recipe;
-
-    public function setUp() {
+    public function setUp(): void
+    {
+        parent::setUp();
         $this->recipe = new Recipe();
     }
 
-    public function testParsingIngredients() {
+    public function testParsingIngredients()
+    {
         $ingredients = "1.5 theelepels olie\n30 kilo aardappels\nZout\n1,6g poeder\n  willekeurig\n";
         $parsed = Recipe::parseIngredientsFromText($ingredients);
 
@@ -39,7 +41,8 @@ class RecipeTest extends TestCase
         $this->assertEquals($fourth->unit, 'g');
     }
 
-    public function testParsingIngredientsHeaders() {
+    public function testParsingIngredientsHeaders()
+    {
         $ingredients = "1.5 theelepels olie\n## Voor de hoofdmoot\n30 kilo aardappels\nZout\n##Afwerking\n1,6g poeder\n  willekeurig\n";
         $parsed = Recipe::parseIngredientsFromText($ingredients);
 

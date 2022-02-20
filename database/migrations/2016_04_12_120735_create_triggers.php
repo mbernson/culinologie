@@ -13,26 +13,26 @@ class CreateTriggers extends Migration
     {
         DB::unprepared('DROP TRIGGER IF EXISTS cookbooks_recipes_sum_insert;');
         DB::unprepared('DROP TRIGGER IF EXISTS cookbooks_recipes_sum_delete;');
-            
-            
-        \DB::unprepared('CREATE TRIGGER cookbooks_recipes_sum_insert AFTER INSERT ON recipes
+
+
+        DB::unprepared('CREATE TRIGGER cookbooks_recipes_sum_insert AFTER INSERT ON recipes
         FOR EACH ROW
         BEGIN
-        
+
         UPDATE cookbooks c SET c.recipes_count = (
         	SELECT count(r.id) FROM recipes r WHERE r.cookbook = NEW.cookbook
         ) WHERE c.slug = NEW.cookbook;
-        
-        END'); 
-        
-        \DB::unprepared('CREATE TRIGGER cookbooks_recipes_sum_delete AFTER DELETE ON recipes
+
+        END');
+
+        DB::unprepared('CREATE TRIGGER cookbooks_recipes_sum_delete AFTER DELETE ON recipes
         FOR EACH ROW
         BEGIN
-        
+
         UPDATE cookbooks c SET c.recipes_count = (
         	SELECT count(r.id) FROM recipes r WHERE r.cookbook = OLD.cookbook
         ) WHERE c.slug = OLD.cookbook;
-        
+
         END');
     }
 
@@ -45,6 +45,5 @@ class CreateTriggers extends Migration
     {
         DB::unprepared('DROP TRIGGER IF EXISTS cookbooks_recipes_sum_insert;');
         DB::unprepared('DROP TRIGGER IF EXISTS cookbooks_recipes_sum_delete;');
-
     }
 }

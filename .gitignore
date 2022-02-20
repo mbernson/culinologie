@@ -1,8 +1,8 @@
-.env
 .idea
 .DS_Store
 public/uploads
 public/videos
+public/fonts
 /node_modules
 public/hot
 public/css

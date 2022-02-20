@@ -1,9 +1,11 @@
-<?php namespace App\Scopes;
+<?php
 
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Model;
+namespace App\Scopes;
+
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use App\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -18,13 +20,12 @@ use Illuminate\Support\Facades\Auth;
  */
 final class VisibilityScope implements Scope
 {
-
     // The item is visible to anyone
-    const VISIBILITY_PUBLIC = 0;
+    public const VISIBILITY_PUBLIC = 0;
     // The item is only visible to its owner
-    const VISIBILITY_PRIVATE = 1;
+    public const VISIBILITY_PRIVATE = 1;
     // The item is only visible to its owner and other logged in users
-    const VISIBILITY_LOGGED_IN = 2;
+    public const VISIBILITY_LOGGED_IN = 2;
 
     private $tableName;
 
@@ -32,7 +33,7 @@ final class VisibilityScope implements Scope
     {
         $this->tableName = $model->getTable();
 
-        if (Auth::check() && Auth::user()->isApproved()) {
+        if (Auth::check() && Auth::user()->is_approved) {
             $this->applyLoggedInScope($builder, Auth::user());
         } else {
             $this->applyPublicScope($builder);

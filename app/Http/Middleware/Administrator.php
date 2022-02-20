@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class Administrator
@@ -10,11 +11,9 @@ class Administrator
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
 
@@ -22,11 +21,11 @@ class Administrator
             return redirect(route('login'))->with('warning', 'Je moet ingelogd zijn om dat te kunnen doen.');
         }
 
-        if (! $user->isApproved()) {
+        if (!$user->is_approved) {
             return redirect()->back()->with('warning', 'Je account moet goedgekeurd zijn om dat te kunnen doen.');
         }
 
-        if (! $user->isAdmin()) {
+        if (!$user->is_admin) {
             return redirect()->back()->with('warning', 'Je moet een beheerder zijn om dat te kunnen doen.');
         }
 

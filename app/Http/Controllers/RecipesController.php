@@ -1,31 +1,28 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use App\Helper\RecipeSearch;
+use App\Http\Requests\SaveRecipeRequest;
 use App\Models\Category;
-use App\Requests\SaveRecipeRequest;
+use App\Models\Comment;
+use App\Models\Recipe;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Image;
-use App\Models\Recipe, App\Models\Ingredient;
-use App\Helper\RecipeSearch;
-use App\Models\Comment;
-
 
 class RecipesController extends Controller
 {
-    private $db;
+    private static int $per_page = 25;
+    private static string $default_language = 'nl';
 
-    private static $per_page = 25;
-    private static $default_language = 'nl';
-
-    public function __construct(DatabaseManager $db)
+    public function __construct(private readonly DatabaseManager $db)
     {
-        $this->db = $db;
     }
 
     /**
@@ -76,7 +73,7 @@ class RecipesController extends Controller
      */
     public function create()
     {
-        return view('recipes.create')->withRecipe(new Recipe);
+        return view('recipes.create')->withRecipe(new Recipe());
     }
 
     /**
@@ -84,7 +81,7 @@ class RecipesController extends Controller
      *
      * @return Response
      */
-    public function store(Request $request, $cookbook = null)
+    public function store(SaveRecipeRequest $request, $cookbook = null)
     {
         $recipe = new Recipe();
         $recipe->user_id = Auth::user()->id;
@@ -99,10 +96,9 @@ class RecipesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id)
     {
         $recipes = Recipe::where('tracking_nr', '=', $id)
             ->orderBy('language', 'asc')->get();
@@ -134,10 +130,9 @@ class RecipesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, int $id)
     {
         $lang = $request->get('lang', static::$default_language);
         $recipe = Recipe::where('tracking_nr', '=', $id)
@@ -155,10 +150,8 @@ class RecipesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $tracking_nr
-     * @return Response
      */
-    public function update(SaveRecipeRequest $request, $tracking_nr)
+    public function update(SaveRecipeRequest $request, int $tracking_nr)
     {
         $lang = $request->get('lang');
         $recipe = Recipe::where('tracking_nr', '=', $tracking_nr)
@@ -215,7 +208,7 @@ class RecipesController extends Controller
 
         try {
             $recipe_saved = $recipe->save();
-        } catch (QueryException $e) {
+        } catch (QueryException) {
             $recipe->tracking_nr = $this->db->table('recipes')->max('tracking_nr') + 1;
             $recipe_saved = $recipe->save();
             Session::flash('warning', 'Let op: je recept is onder een nieuw volgnummer bewaard, omdat het opgegeven nummer al in gebruik was.');
@@ -227,16 +220,16 @@ class RecipesController extends Controller
                 'uploads',
                 'pictures'
             ]);
-            $filename = $recipe->tracking_nr.'.jpg';
+            $filename = $recipe->tracking_nr . '.jpg';
             $file = $request->file('picture')->move($path, $filename);
             $image = Image::make($file)->widen(480);
-            $image->save($path.DIRECTORY_SEPARATOR.$filename);
+            $image->save($path . DIRECTORY_SEPARATOR . $filename);
         }
 
         $ingredients_saved = $recipe->saveIngredientsFromText($request->get('ingredients'));
 
         if ($recipe_saved && $ingredients_saved) {
-            return redirect()->route('recipes.show', ['recipes' => $recipe->tracking_nr])->with('lang', $recipe->language);
+            return redirect()->route('recipes.show', ['recipe' => $recipe->tracking_nr])->with('lang', $recipe->language);
         }
 
         abort(500);
@@ -245,10 +238,9 @@ class RecipesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id)
     {
         if (!$request->has('lang')) {
             return abort(500);
@@ -305,7 +297,7 @@ class RecipesController extends Controller
             ->with('lang', $recipe->language);
     }
 
-    const DEFAULT_LIST = 'Loved';
+    final public const DEFAULT_LIST = 'Loved';
 
     public function bookmark(Request $request, $tracking_nr)
     {
@@ -360,7 +352,7 @@ class RecipesController extends Controller
         $comment->user_id = Auth::user()->id;
         $comment->recipe_tracking_nr = $trackingnr;
         $comment->save();
-        return Redirect::to('recipes/'.$trackingnr);
+        return Redirect::to('recipes/' . $trackingnr);
     }
 
     public function deleteComment(Request $request, $recipe_id, $comment_id)

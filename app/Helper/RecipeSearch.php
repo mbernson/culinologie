@@ -1,21 +1,22 @@
-<?php namespace App\Helper;
-	
+<?php
+
+namespace App\Helper;
+
 use App\Models\Recipe;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 final class RecipeSearch
 {
-    private $params = [
+    private array $params = [
         'cookbook' => null,
         'category' => null,
         'title' => null,
         'query' => null,
     ];
 
-    private $cookbook = '*';
+    private string $cookbook = '*';
 
     public function __construct(array $params = [])
     {
@@ -29,11 +30,11 @@ final class RecipeSearch
         }
         
         if ($request->has('liked') && Auth::check()) {
-	        $query->whereIn('id', function ($q) {
-		        $q->select('recipe_id')
-			        ->from('recipe_bookmarks')
-			        ->where('user_id', Auth::user()->getKey());
-	        });
+            $query->whereIn('id', function ($q) {
+                $q->select('recipe_id')
+                    ->from('recipe_bookmarks')
+                    ->where('user_id', Auth::user()->getKey());
+            });
         }
 
         if ($request->has('query')) {
@@ -80,7 +81,7 @@ final class RecipeSearch
         return $this->cookbook != '*';
     }
 
-    public function setCookbook($cookbook)
+    public function setCookbook(string $cookbook)
     {
         $this->cookbook = $cookbook;
     }

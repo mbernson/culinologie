@@ -1,13 +1,12 @@
-<?php namespace App\Console\Commands;
+<?php
+
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 class Inspire extends Command
 {
-
     /**
      * The console command name.
      *
@@ -25,10 +24,12 @@ class Inspire extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
-        $this->comment(PHP_EOL.Inspiring::quote().PHP_EOL);
+        $this->comment(PHP_EOL . Inspiring::quote() . PHP_EOL);
+
+        return 0;
     }
 }

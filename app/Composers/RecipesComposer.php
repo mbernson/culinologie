@@ -1,22 +1,20 @@
-<?php namespace App\Composers;
+<?php
+
+namespace App\Composers;
 
 use App\Models\Category;
+use App\Models\Cookbook;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Cookbook;
 
 final class RecipesComposer
 {
-
-    private $db;
-
-    public function __construct(DatabaseManager $db)
+    public function __construct(private readonly DatabaseManager $db)
     {
-        $this->db = $db;
     }
 
-    private $static_data = [
+    private array $static_data = [
         'languages' => [
             'nl' => 'Nederlands',
             'uk' => 'Engels (Groot Brittanië)',
@@ -63,7 +61,8 @@ final class RecipesComposer
 
     public function allCookbooks(View $view)
     {
-        $view->with('cookbooks',
+        $view->with(
+            'cookbooks',
             Cookbook::select('id', 'title', 'slug')
             ->orderBy('id', 'desc')
             ->get()
@@ -72,7 +71,8 @@ final class RecipesComposer
 
     public function userCookbooks(View $view)
     {
-        $view->with('cookbooks',
+        $view->with(
+            'cookbooks',
             $this->db->table('cookbooks')
             ->where('user_id', '=', Auth::user()->id)
             ->orderBy('id', 'desc')

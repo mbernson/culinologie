@@ -37,7 +37,7 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{{ route('home.index') }}"><i class="fa fa-utensils"></i> Recepten</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('cookbooks.index') }}"><i class="fa fa-book"></i> Kookboeken</a></li>
-                        @if(Auth::check() && Auth::user()->isAdmin())
+                        @if(Auth::check() && Auth::user()->is_admin)
                         <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}"><i class="fa fa-users"></i> Gebruikers</a></li>
                         @endif
                         <li class="nav-item"><a class="nav-link" href="{{ route('help.index') }}"><i class="fa fa-question-circle"></i> Help</a></li>
